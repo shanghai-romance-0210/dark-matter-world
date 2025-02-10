@@ -1,101 +1,75 @@
-import Image from "next/image";
+"use client"
+
+import { useState } from "react";
+import { db } from "@/lib/firebaseConfig";
+import { collection, query, getDocs, doc, setDoc } from "firebase/firestore";
+import { useEffect } from "react";
+import Link from "next/link";
+
+interface Room {
+  id: string;
+  name: string;
+}
 
 export default function Home() {
-  return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <main className="flex flex-col gap-8 row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="list-inside list-decimal text-sm text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
-          <li className="mb-2">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-semibold">
-              src/app/page.tsx
-            </code>
-            .
-          </li>
-          <li>Save and see your changes instantly.</li>
-        </ol>
+  const [roomName, setRoomName] = useState("");
+  const [roomId, setRoomId] = useState("");
+  const [rooms, setRooms] = useState<Room[]>([]);
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:min-w-44"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
+  useEffect(() => {
+    const fetchRooms = async () => {
+      const roomsQuery = query(collection(db, "rooms"));
+      const querySnapshot = await getDocs(roomsQuery);
+      const roomList: Room[] = querySnapshot.docs.map((doc) => {
+        return {
+          id: doc.id,
+          name: doc.data().name,
+        };
+      });
+      setRooms(roomList);
+    };
+    fetchRooms();
+  }, []);
+
+  const createRoom = async () => {
+    if (!roomName || !roomId) return;
+    try {
+      const roomRef = doc(db, "rooms", roomId);
+      await setDoc(roomRef, { name: roomName });
+      setRoomName("");
+      setRoomId("");
+    } catch (error) {
+      console.error("Error creating room: ", error);
+    }
+  };
+
+  return (
+    <div className="md:max-w-md w-full md:mx-auto p-4 md:py-8">
+      <div className="p-4 rounded-lg border border-zinc-200 shadow-sm">
+        <h1 className="text-xl font-bold mb-4">Create a New Room</h1>
+        <input type="text" value={roomName} onChange={(e) => setRoomName(e.target.value)} className="px-4 py-2 border border-zinc-200 rounded-lg mb-4 w-full placeholder:text-zinc-400 outline-none duration-200 focus-visible:ring-2 ring-offset-2" placeholder="Room Name" />
+        <input type="text" value={roomId} onChange={(e) => setRoomId(e.target.value)} className="px-4 py-2 border border-zinc-200 rounded-lg mb-4 w-full placeholder:text-zinc-400 outline-none duration-200 focus-visible:ring-2 ring-offset-2" placeholder="Room ID" />
+
+        <button onClick={createRoom} className="bg-zinc-800 text-white py-2 px-4 rounded-full w-full font-bold outline-none duration-200 focus-visible:ring-2 ring-offset-2">
+          Create
+        </button>
+      </div>
+      <div className="mt-8 p-4 rounded-lg border border-zinc-200 shadow-sm">
+        <h2 className="text-xl font-bold">Room List</h2>
+        <div className="mt-4 space-y-2">
+          {rooms.map((room, index) => (
+              <div key={index} className="p-4 rounded-lg bg-zinc-50 shadow-sm flex items-center">
+                <div>
+                  <p className="font-bold">{room.name}</p>
+                  <p className="text-sm text-zinc-400 mt-0.5">{room.id}</p>
+                </div>
+                <div className="ml-auto flex">
+                 <Link href={`/rooms/${room.id}`}><div className="px-4 py-2 rounded-full bg-zinc-800 text-white font-bold">Join</div></Link>
+                </div>
+              </div>
+          ))}
         </div>
-      </main>
-      <footer className="row-start-3 flex gap-6 flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
+      </div>
     </div>
   );
 }
