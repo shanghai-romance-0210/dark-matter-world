@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 import { db } from "@/lib/firebaseConfig";
 import { collection, addDoc, query, orderBy, onSnapshot, Timestamp } from "firebase/firestore";
 import { usePathname } from "next/navigation"; // usePathnameを使用
+import { FaPaperPlane } from "react-icons/fa";
 
 // メッセージの型定義
 interface Message {
@@ -67,44 +68,40 @@ export default function RoomPage() {
   };
 
   return (
-    <div className="container mx-auto p-4">
-      <h1 className="text-3xl font-bold mb-4">ルーム: {roomId}</h1>
-
-      {/* ユーザー名設定フォーム */}
-      <div className="mb-4">
-        <input
-          type="text"
-          value={username}
-          onChange={handleUsernameChange}
-          className="p-2 border border-gray-300 rounded-md w-full"
-          placeholder="名前を入力"
-        />
+    <div className="md:max-w-md w-full md:mx-auto p-4 md:py-8">
+      <div className="p-4 rounded-lg border border-zinc-200 shadow-sm">
+        <div className="flex items-center mb-4">
+          <h1 className="text-xl font-bold">{roomId}</h1>
+        </div>
+        <input type="text" value={username} onChange={handleUsernameChange} className="px-4 py-2 border border-zinc-200 rounded-lg w-full placeholder:text-zinc-400 outline-none duration-200 focus-visible:ring-2 ring-offset-2" placeholder="Name" />
       </div>
 
-      <div className="border-b mb-4"></div>
 
-      <div className="space-y-4 mb-4">
+      <div className="space-y-4 my-8 flex flex-col border border-zinc-200 rounded-lg p-4 shadow-sm h-64 overflow-y-auto">
+        <h2 className="text-xl font-bold">Chat</h2>
         {messages.map((msg, index) => (
-          <div key={index} className="p-2 bg-gray-100 rounded-md">
-            <p className="font-semibold">{msg.username}: </p>
+          <div key={index} className="p-2 bg-zinc-50 rounded-lg">
+            <div className="flex items-center">
+              <p className="text-sm text-zinc-600">{msg.username}</p>
+            </div>
             <p>{msg.text}</p>
           </div>
         ))}
       </div>
 
-      <div className="flex">
+      <div className="flex items-center border border-zinc-200 rounded-lg p-2 shadow-sm sticky bottom-8">
         <input
           type="text"
           value={message}
           onChange={(e) => setMessage(e.target.value)}
-          className="p-2 border border-gray-300 rounded-l-md w-full"
+          className="px-4 py-2 bg-zinc-50 rounded-lg w-full placeholder:text-zinc-400 outline-none duration-200 focus-visible:ring-2 ring-offset-2"
           placeholder="メッセージを入力"
         />
         <button
           onClick={sendMessage}
-          className="bg-primary text-white py-2 px-4 rounded-r-md"
+          className="bg-zinc-800 text-white w-10 h-10 aspect-square rounded-lg font-bold whitespace-nowrap flex items-center justify-center ml-2"
         >
-          送信
+          <FaPaperPlane />
         </button>
       </div>
     </div>
