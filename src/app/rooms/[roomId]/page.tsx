@@ -278,22 +278,30 @@ export default function RoomPage() {
                   </button>
                 </div>
                 <div className="space-y-4">
-                  {vote.options.map((option: string, index: number) => (
-                    <button
-                      key={index}
-                      onClick={() => handleVote(vote.id, index)}
-                      className="w-full py-2 px-4 bg-zinc-50 rounded-lg relative overflow-hidden"
-                    >
-                      <div
-                        className="absolute inset-0 bg-zinc-200"
-                        style={{
-                          width: `${Math.round((vote.votes[index] / vote.votes.reduce((a, b) => a + b, 0)) * 100)}%`
-                        }}
-                      />
-                      <span className="relative">{option}</span>
-                      <span className="ml-2 text-sm relative text-zinc-400">{`(${vote.votes[index]})`}</span>
-                    </button>
-                  ))}
+                {vote.options.map((option: string, index: number) => {
+                const totalVotes = vote.votes.reduce((a, b) => a + b, 0);
+                const hasVotes = totalVotes > 0;
+                return (
+                  <button
+                    key={index}
+                    onClick={() => handleVote(vote.id, index)}
+                    className="w-full py-2 px-4 rounded-lg relative overflow-hidden bg-zinc-50"
+                  >
+                    <div
+                      className={`absolute inset-0 ${hasVotes ? 'bg-zinc-200' : 'bg-zinc-50'}`}
+                      style={{
+                        width: hasVotes
+                          ? `${Math.round((vote.votes[index] / totalVotes) * 100)}%`
+                          : '0%'
+                      }}
+                    />
+                    <span className="relative">{option}</span>
+                    <span className="ml-2 text-sm relative text-zinc-400">
+                      {`(${vote.votes[index]})`}
+                    </span>
+                  </button>
+                );
+              })}
                 </div>
               </div>
             ))}
@@ -301,22 +309,28 @@ export default function RoomPage() {
         </div>
       )}
 
-      <div className="space-y-4 mt-8 flex flex-col border border-zinc-200 rounded-lg p-4 shadow-sm h-[640px] overflow-y-auto">
+      <div className="space-y-4 mt-8 flex flex-col border border-zinc-200 rounded-lg p-4 shadow-sm max-h-[640px] overflow-y-auto">
         <h2 className="text-xl font-bold">Chat</h2>
-        {messages.map((msg, index) => (
-          <div key={index} className="p-4 bg-zinc-50 rounded-lg">
-            <div className="flex items-center mb-2">
-              <img
-                src={`https://api.dicebear.com/9.x/thumbs/svg?seed=${msg.username}&backgroundColor=f472b6,facc15,60a5fa,4ade80,c084fc&eyesColor=ffffff&mouthColor=ffffff&shapeColor[]`}
-                alt="Avatar"
-                className="bg-white w-8 h-8 rounded-full aspetc-square mr-2"
-              />
-              <p className="text-sm font-bold mr-2 line-clamp-1">{msg.username}</p>
-              <p className="text-sm text-zinc-400 whitespace-nowrap">{formatRelativeTime(msg.createdAt)}</p>
+          {messages.length > 0 ? (
+            messages.map((msg, index) => (
+              <div key={index} className="p-4 bg-zinc-50 rounded-lg">
+                <div className="flex items-center mb-2">
+                  <img
+                    src={`https://api.dicebear.com/9.x/thumbs/svg?seed=${msg.username}&backgroundColor=f472b6,facc15,60a5fa,4ade80,c084fc&eyesColor=ffffff&mouthColor=ffffff&shapeColor[]`}
+                    alt="Avatar"
+                    className="bg-white w-8 h-8 rounded-full aspect-square mr-2"
+                  />
+                  <p className="text-sm font-bold mr-2 line-clamp-1">{msg.username}</p>
+                  <p className="text-sm text-zinc-400 whitespace-nowrap">{formatRelativeTime(msg.createdAt)}</p>
+                </div>
+                <p>{msg.text}</p>
+              </div>
+            ))
+          ) : (
+            <div className="text-center text-zinc-400">
+              <p>No messages available.</p>
             </div>
-            <p>{msg.text}</p>
-          </div>
-        ))}
+          )}
       </div>
 
       <div className="mt-8 hidden md:flex items-center border border-zinc-200 rounded-lg p-2 shadow-sm sticky bottom-8 bg-white">
