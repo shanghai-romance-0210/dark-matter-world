@@ -173,7 +173,7 @@ export default function RoomPage() {
           <div key={index} className="p-4 bg-zinc-50 rounded-lg">
             <div className="flex items-center mb-2">
               <img
-                src={`https://api.dicebear.com/9.x/thumbs/svg?seed=${msg.username}&backgroundColor=475569,2563eb,e11d48,f472b6&eyesColor=ffffff&mouthColor=ffffff&shapeColor[]`}
+                src={`https://api.dicebear.com/9.x/thumbs/svg?seed=${msg.username}&backgroundColor=f472b6,facc15,60a5fa,4ade80,c084fc&eyesColor=ffffff&mouthColor=ffffff&shapeColor[]`}
                 alt="Avatar"
                 className="bg-white w-8 h-8 rounded-full aspetc-square mr-2"
               />
