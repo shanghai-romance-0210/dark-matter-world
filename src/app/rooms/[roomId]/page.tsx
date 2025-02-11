@@ -428,6 +428,10 @@ export default function RoomPage() {
                 <Image src="/stamps/stamp2.png" alt="Stamp" width={100} height={100} className="w-8" />
                 <p className="ml-2">stamp2</p>
               </div>
+              <div className="flex items-center border p-2 border-zinc-200 rounded-lg">
+                <Image src="/stamps/stamp3.png" alt="Stamp" width={100} height={100} className="w-8" />
+                <p className="ml-2">stamp3</p>
+              </div>
             </div>  
             <div className="flex justify-end">
               <button
