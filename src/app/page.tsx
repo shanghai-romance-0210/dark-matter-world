@@ -42,6 +42,11 @@ export default function Home() {
       return;
     }
 
+    if (roomId.length > 10) {
+      setErrorMessage("Room ID must not exceed 10 characters.");
+      return;
+    }
+
     setErrorMessage(""); // 入力が有効であればエラーメッセージをクリア
 
     try {
@@ -92,12 +97,12 @@ export default function Home() {
           ) : (
             rooms.map((room, index) => (
               <div key={index} className="p-4 rounded-lg bg-zinc-50 shadow-sm flex items-center">
-                <div>
-                  <p className="font-bold">{room.name}</p>
+                <div className="mr-4">
+                  <p className="font-bold line-clamp-2">{room.name}</p>
                   <p className="text-sm text-zinc-400 mt-0.5">{room.id}</p>
                 </div>
                 <div className="ml-auto flex">
-                  <Link href={`/rooms/${room.id}`}>
+                  <Link href={`/rooms/${room.id}`} className="rounded-full outline-none duration-200 focus-visible:ring-2 ring-offset-2">
                     <div className="px-4 py-2 rounded-full bg-zinc-800 text-white font-bold">Join</div>
                   </Link>
                 </div>
