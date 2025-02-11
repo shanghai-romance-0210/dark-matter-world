@@ -123,7 +123,6 @@ export default function RoomPage() {
     }
   }, [roomId]);
 
-  // メッセージ送信
   const sendMessage = async () => {
     if (!message || !roomId || !username) return;
   
@@ -133,11 +132,6 @@ export default function RoomPage() {
         createdAt: new Date(),
         username: username,
       });
-  
-      // "poop"メッセージが送られた場合にモーダルを表示
-      if (message.toLowerCase() === "poop") {
-        setPoopModalOpen(true);
-      }
   
       setMessage("");
     } catch (error) {
@@ -218,7 +212,7 @@ export default function RoomPage() {
     } catch (error) {
       console.error("Error deleting vote: ", error);
     }
-  };  
+  };
 
   return (
     <div className="md:max-w-md w-full md:mx-auto p-4 md:py-8">
@@ -278,7 +272,7 @@ export default function RoomPage() {
             {votes.map((vote) => (
               <div key={vote.id} className="p-4 shadow-sm rounded-lg border border-zinc-200 rounded-lg p-4 shadow-sm bg-white">
                 <div className="flex items-center mb-4">
-                  <h3 className="font-bold">{vote.question}</h3>
+                  <h3 className="font-bold mr-2">{vote.question}</h3>
                   <button
                     onClick={() => deleteVote(vote.id)}
                     className="ml-auto text-red-600 px-2 py-0.5 text-sm bg-red-50 rounded-lg"
@@ -320,22 +314,39 @@ export default function RoomPage() {
 
       <div className="space-y-4 mt-8 flex flex-col border border-zinc-200 rounded-lg p-4 shadow-sm max-h-[640px] overflow-y-auto">
         <h2 className="text-xl font-bold">Chat</h2>
-          {messages.length > 0 ? (
-            messages.map((msg, index) => (
+        {messages.length > 0 ? (
+          messages.map((msg, index) => {
+            // メッセージがスタンプの場合
+            const isStamp = msg.text.startsWith("stamp");
+
+            return (
               <div key={index} className="p-4 bg-zinc-50 rounded-lg flex flex-col">
                 <div className="flex items-center mb-2">
                   <Avatar name={msg.username} />
                   <p className="text-sm font-bold mx-2 line-clamp-1">{msg.username}</p>
                   <p className="text-sm text-zinc-400 whitespace-nowrap">{formatRelativeTime(msg.createdAt)}</p>
                 </div>
-                <p>{msg.text}</p>
+                {isStamp ? (
+                  <div className="w-full flex items-center justify-center">
+                    <Image
+                      src={`/stamps/${msg.text}.png`} // :stamp1 → /stamps/:stamp1.png
+                      alt={msg.text}
+                      width={100}
+                      className="w-32"
+                      height={100}
+                    />
+                  </div>
+                ) : (
+                  <p>{msg.text}</p>  // スタンプでなければ通常のテキスト
+                )}
               </div>
-            ))
-          ) : (
-            <div className="text-center text-zinc-400">
-              <p>No messages available.</p>
-            </div>
-          )}
+            );
+          })
+        ) : (
+          <div className="text-center text-zinc-400">
+            <p>No messages available.</p>
+          </div>
+        )}
       </div>
 
       <div className="mt-8 hidden md:flex items-center border border-zinc-200 rounded-lg p-2 shadow-sm sticky bottom-8 bg-white">
