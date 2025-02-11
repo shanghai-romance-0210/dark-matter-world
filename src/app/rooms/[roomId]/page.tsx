@@ -254,7 +254,7 @@ export default function RoomPage() {
         />
         <button
           onClick={sendMessage}
-          className="bg-zinc-800 text-white w-10 h-10 text-xl aspect-square rounded-lg font-bold whitespace-nowrap flex items-center justify-center ml-4"
+          className="bg-zinc-800 text-white w-10 h-10 text-xl aspect-square rounded-lg font-bold whitespace-nowrap flex items-center justify-center ml-4 placeholder:text-zinc-400"
         >
           <FaPaperPlane />
         </button>
@@ -356,7 +356,7 @@ export default function RoomPage() {
               value={voteQuestion}
               onChange={handleVoteQuestionChange}
               placeholder="Enter your question"
-              className="mb-4 w-full px-4 py-2 border border-zinc-200 rounded-lg outline-none duration-200 focus-visible:ring-2 ring-offset-2"
+              className="placeholder:text-zinc-400 mb-4 w-full px-4 py-2 border border-zinc-200 rounded-lg outline-none duration-200 focus-visible:ring-2 ring-offset-2"
             />
             {voteOptions.map((option, index) => (
               <input
@@ -365,25 +365,25 @@ export default function RoomPage() {
                 value={option}
                 onChange={(e) => handleVoteOptionChange(e, index)}
                 placeholder={`Option ${index + 1}`}
-                className="mb-2 w-full px-4 py-2 border border-zinc-200 rounded-lg outline-none duration-200 focus-visible:ring-2 ring-offset-2"
+                className="placeholder:text-zinc-400 mb-2 w-full px-4 py-2 border border-zinc-200 rounded-lg outline-none duration-200 focus-visible:ring-2 ring-offset-2"
               />
             ))}
             <button
               onClick={() => setVoteOptions([...voteOptions, ""])}
-              className="text-zinc-600 mb-4 text-sm p-0"
+              className="text-zinc-600 mb-4 text-sm p-0 outline-none"
             >
               Add another option
             </button>
             <div className="flex justify-end">
               <button
                 onClick={closeVoteModal}
-                className="text-zinc-600 px-4 py-2 rounded-lg"
+                className="text-zinc-600 px-4 py-2 rounded-lg outline-none duration-200 focus-visible:ring-2 ring-offset-2"
               >
                 Cancel
               </button>
               <button
                 onClick={createVote}
-                className="bg-zinc-800 text-white px-4 py-2 rounded-lg"
+                className="bg-zinc-800 text-white px-4 py-2 rounded-lg outline-none duration-200 focus-visible:ring-2 ring-offset-2"
               >
                 Create Vote
               </button>
