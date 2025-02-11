@@ -319,7 +319,7 @@ export default function RoomPage() {
         <h2 className="text-xl font-bold">Chat</h2>
         {messages.length > 0 ? (
           messages.map((msg, index) => {
-            const isStamp = msg.text.startsWith("stamp");
+            const isStamp = msg.text.trim().startsWith("stamp") && !msg.text.trim().includes(" ");
 
             return (
               <div key={index} className="p-4 bg-zinc-50 rounded-lg flex flex-col">
