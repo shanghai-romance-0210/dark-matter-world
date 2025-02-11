@@ -151,7 +151,7 @@ export default function RoomPage() {
         />
       </div>
 
-      <div className="my-8 flex md:hidden items-center border border-zinc-200 rounded-lg p-2 shadow-sm sticky top-8 bg-white">
+      <div className="my-8 flex md:hidden items-center border border-zinc-200 rounded-lg p-2 shadow-sm sticky top-4 bg-white">
         <input
           type="text"
           value={message}
@@ -177,8 +177,8 @@ export default function RoomPage() {
                 alt="Avatar"
                 className="bg-white w-8 h-8 rounded-full aspetc-square mr-2"
               />
-              <p className="text-sm font-bold mr-2">{msg.username}</p>
-              <p className="text-sm text-zinc-400">{formatRelativeTime(msg.createdAt)}</p>
+              <p className="text-sm font-bold mr-2 line-clamp-1">{msg.username}</p>
+              <p className="text-sm text-zinc-400 whitespace-nowrap">{formatRelativeTime(msg.createdAt)}</p>
             </div>
             <p>{msg.text}</p>
           </div>
@@ -195,7 +195,7 @@ export default function RoomPage() {
         />
         <button
           onClick={sendMessage}
-          className="bg-zinc-800 text-white w-10 h-10 text-xl aspect-square rounded-lg font-bold whitespace-nowrap flex items-center justify-center ml-2"
+          className="bg-zinc-800 text-white w-10 h-10 text-xl aspect-square rounded-lg font-bold whitespace-nowrap flex items-center justify-center ml-2 outline-none duration-200 focus-visible:ring-2 ring-offset-2"
         >
           <FaPaperPlane />
         </button>

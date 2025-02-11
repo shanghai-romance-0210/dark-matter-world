@@ -60,7 +60,7 @@ export default function Home() {
   };
 
   return (
-    <div className="md:max-w-md w-full md:mx-auto p-4 md:py-8">
+    <div className="md:max-w-md w-full md:mx-auto p-4 md:py-8"> 
       <div className="p-4 rounded-lg border border-zinc-200 shadow-sm">
         <h1 className="text-xl font-bold mb-4">Create a New Room</h1>
         <input
