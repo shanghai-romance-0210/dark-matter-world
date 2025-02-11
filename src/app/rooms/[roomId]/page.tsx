@@ -244,17 +244,17 @@ export default function RoomPage() {
           className="px-4 py-2 border border-zinc-200 rounded-lg w-full placeholder:text-zinc-400 outline-none duration-200 focus-visible:ring-2 ring-offset-2"
           placeholder="Your Name"
         />
-        <div className="mt-4 flex md:hidden items-center border border-zinc-200 rounded-lg p-2">
+        <div className="mt-4 flex md:hidden items-center">
         <input
           type="text"
           value={message}
           onChange={(e) => setMessage(e.target.value)}
-          className="px-4 py-2 bg-zinc-50 rounded-lg w-full placeholder:text-zinc-400 outline-none duration-200 focus-visible:ring-2 ring-offset-2"
+          className="px-4 py-2 border border-zinc-200 rounded-lg w-full placeholder:text-zinc-400 outline-none duration-200 focus-visible:ring-2 ring-offset-2"
           placeholder="Enter a message..."
         />
         <button
           onClick={sendMessage}
-          className="bg-zinc-800 text-white w-10 h-10 text-xl aspect-square rounded-lg font-bold whitespace-nowrap flex items-center justify-center ml-2"
+          className="bg-zinc-800 text-white w-10 h-10 text-xl aspect-square rounded-lg font-bold whitespace-nowrap flex items-center justify-center ml-4"
         >
           <FaPaperPlane />
         </button>
