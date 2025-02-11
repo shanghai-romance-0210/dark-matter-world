@@ -1,29 +1,73 @@
 "use client"
 import { useState, useEffect } from "react";
 import { db } from "@/lib/firebaseConfig";
-import { collection, addDoc, query, orderBy, onSnapshot, Timestamp, doc, deleteDoc, getDocs, getDoc } from "firebase/firestore";
+import { collection, addDoc, query, orderBy, onSnapshot, Timestamp, doc, deleteDoc, getDocs, getDoc, updateDoc } from "firebase/firestore";
 import { usePathname } from "next/navigation"; 
 import { FaPaperPlane } from "react-icons/fa";
 import { formatDistanceToNow } from "date-fns"; 
 import Link from "next/link";
 import { FiChevronLeft, FiMoreHorizontal } from "react-icons/fi";
 
-// メッセージの型定義
 interface Message {
   text: string;
   createdAt: Timestamp;
   username: string;
 }
 
+interface Vote {
+  id: string;
+  question: string;
+  options: string[];
+  createdAt: Timestamp;
+  votes: number[];
+}
+
 export default function RoomPage() {
   const [message, setMessage] = useState("");
   const [messages, setMessages] = useState<Message[]>([]);
   const [username, setUsername] = useState("");
-  const [isDropdownOpen, setIsDropdownOpen] = useState(false); // ドロップダウンの開閉状態
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const pathname = usePathname();
   const roomId = pathname.split("/").pop();
   const [roomName, setRoomName] = useState("");
+  const [isVoteModalOpen, setIsVoteModalOpen] = useState(false);
+  const [voteQuestion, setVoteQuestion] = useState("");
+  const [voteOptions, setVoteOptions] = useState<string[]>(["", ""]);
+  const [votes, setVotes] = useState<Vote[]>([]);
 
+  useEffect(() => {
+    if (!roomId) return;
+    const votesQuery = query(
+      collection(db, "rooms", roomId, "votes"),
+      orderBy("createdAt")
+    );
+  
+    onSnapshot(votesQuery, (querySnapshot) => {
+      const voteList: Vote[] = querySnapshot.docs.map((doc) => {
+        return { id: doc.id, ...doc.data() } as Vote;
+      });      
+      setVotes(voteList);
+    });
+  }, [roomId]);
+  
+  // 投票の選択肢を選ぶ処理
+  const handleVote = async (voteId: string, optionIndex: number) => {
+    // roomIdがundefinedでないことをチェック
+    if (!roomId) {
+      console.error("roomId is undefined");
+      return;
+    }
+  
+    const voteRef = doc(db, "rooms", roomId, "votes", voteId);
+    const voteSnapshot = await getDoc(voteRef);
+  
+    if (voteSnapshot.exists()) {
+      const updatedVotes = voteSnapshot.data().votes;
+      updatedVotes[optionIndex] += 1;  // 選択肢の投票数を1増やす
+  
+      await updateDoc(voteRef, { votes: updatedVotes });
+    }
+  };  
   // ユーザー名の設定
   const handleUsernameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setUsername(e.target.value);
@@ -118,6 +162,43 @@ export default function RoomPage() {
     }
   };
 
+  // モーダルを表示する関数
+  const openVoteModal = () => setIsVoteModalOpen(true);
+
+  // モーダルを閉じる関数
+  const closeVoteModal = () => setIsVoteModalOpen(false);
+
+  // 投票の質問を更新
+  const handleVoteQuestionChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setVoteQuestion(e.target.value);
+  };
+
+  const handleVoteOptionChange = (e: React.ChangeEvent<HTMLInputElement>, index: number) => {
+    const newOptions = [...voteOptions];
+    newOptions[index] = e.target.value;
+    setVoteOptions(newOptions);
+  };
+
+  const createVote = async () => {
+    if (!voteQuestion || voteOptions.some((opt) => opt === "") || !roomId) return;  // Check if roomId is defined
+  
+    try {
+      // Ensure roomId is a valid string and prevent undefined
+      await addDoc(collection(db, "rooms", roomId, "votes"), {
+        question: voteQuestion,
+        options: voteOptions,
+        createdAt: new Date(),
+        votes: new Array(voteOptions.length).fill(0),  // Initial vote count for each option is 0
+      });
+  
+      setVoteQuestion("");
+      setVoteOptions(["", ""]);
+      closeVoteModal();
+    } catch (error) {
+      console.error("Error creating vote: ", error);
+    }
+  };  
+
   return (
     <div className="md:max-w-md w-full md:mx-auto p-4 md:py-8">
       <div className="p-4 rounded-lg border border-zinc-200 shadow-sm">
@@ -135,7 +216,7 @@ export default function RoomPage() {
             </button>
             {isDropdownOpen && (
               <div className="absolute right-0 mt-2 w-64 p-2 bg-white border border-zinc-200 rounded-lg shadow-lg">
-                <button className="w-full px-4 py-2 text-left hover:bg-zinc-50 duration-200 rounded-lg">
+                <button onClick={openVoteModal} className="w-full px-4 py-2 text-left hover:bg-zinc-50 duration-200 rounded-lg">
                 Create a new vote
                 </button>
                 <button onClick={deleteRoom} className="w-full text-red-600 px-4 py-2 text-left hover:bg-red-50 duration-200 rounded-lg">
@@ -170,7 +251,7 @@ export default function RoomPage() {
         </button>
       </div>
 
-      <div className="space-y-4 md:my-8 flex flex-col border border-zinc-200 rounded-lg p-4 shadow-sm h-[640px] overflow-y-auto">
+      <div className="space-y-4 mt-8 flex flex-col border border-zinc-200 rounded-lg p-4 shadow-sm h-[640px] overflow-y-auto">
         <h2 className="text-xl font-bold">Chat</h2>
         {messages.map((msg, index) => (
           <div key={index} className="p-4 bg-zinc-50 rounded-lg">
@@ -188,7 +269,32 @@ export default function RoomPage() {
         ))}
       </div>
 
-      <div className="hidden md:flex items-center border border-zinc-200 rounded-lg p-2 shadow-sm sticky bottom-8 bg-white">
+      <div className="mt-8 border border-zinc-200 rounded-lg p-4 shadow-sm bg-white">
+        <h2 className="text-xl font-bold mb-4">Votes</h2>
+        <div className="space-y-4">
+          {votes.map((vote) => (
+            <div key={vote.id} className="p-4 bg-zinc-50 rounded-lg">
+              <h3 className="font-bold">{vote.question}</h3>
+              <div className="mt-2 space-y-2">
+                {vote.options.map((option: string, index: number) => (
+                  <button
+                    key={index}
+                    onClick={() => handleVote(vote.id, index)}
+                    className="w-full py-2 px-4 hover:bg-zinc-200 bg-white rounded-lg duration-200 text-left"
+                  >
+                    {option}
+                      <span className="ml-2 text-sm text-zinc-400">
+                        ({vote.votes[index]})
+                      </span>
+                  </button>
+                ))}
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      <div className="mt-8 hidden md:flex items-center border border-zinc-200 rounded-lg p-2 shadow-sm sticky bottom-8 bg-white">
         <input
           type="text"
           value={message}
@@ -203,6 +309,50 @@ export default function RoomPage() {
           <FaPaperPlane />
         </button>
       </div>
+      {isVoteModalOpen && (
+        <div className="fixed inset-0 flex justify-center items-center bg-zinc-400 bg-opacity-50 backdrop-blur">
+          <div className="bg-white p-6 rounded-lg w-3/4 md:w-1/4">
+            <h2 className="text-lg font-bold mb-4">Create a New Vote</h2>
+            <input
+              type="text"
+              value={voteQuestion}
+              onChange={handleVoteQuestionChange}
+              placeholder="Enter your question"
+              className="mb-4 w-full px-4 py-2 border border-zinc-200 rounded-lg"
+            />
+            {voteOptions.map((option, index) => (
+              <input
+                key={index}
+                type="text"
+                value={option}
+                onChange={(e) => handleVoteOptionChange(e, index)}
+                placeholder={`Option ${index + 1}`}
+                className="mb-2 w-full px-4 py-2 border border-zinc-200 rounded-lg"
+              />
+            ))}
+            <button
+              onClick={() => setVoteOptions([...voteOptions, ""])}
+              className="text-zinc-600 mb-4 text-sm p-0"
+            >
+              Add another option
+            </button>
+            <div className="flex justify-end">
+              <button
+                onClick={closeVoteModal}
+                className="text-zinc-600 px-4 py-2 rounded-lg"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={createVote}
+                className="bg-zinc-800 text-white px-4 py-2 rounded-lg"
+              >
+                Create Vote
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
