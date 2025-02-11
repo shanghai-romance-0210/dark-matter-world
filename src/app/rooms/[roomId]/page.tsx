@@ -135,6 +135,9 @@ export default function RoomPage() {
             </button>
             {isDropdownOpen && (
               <div className="absolute right-0 mt-2 w-64 p-2 bg-white border border-zinc-200 rounded-lg shadow-lg">
+                <button className="w-full px-4 py-2 text-left hover:bg-zinc-50 duration-200 rounded-lg">
+                Create a new vote
+                </button>
                 <button onClick={deleteRoom} className="w-full text-red-600 px-4 py-2 text-left hover:bg-red-50 duration-200 rounded-lg">
                   Delete Room
                 </button>
