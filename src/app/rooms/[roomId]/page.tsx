@@ -37,6 +37,7 @@ export default function RoomPage() {
   const [voteOptions, setVoteOptions] = useState<string[]>(["", ""]);
   const [votes, setVotes] = useState<Vote[]>([]);
   const [poopModalOpen, setPoopModalOpen] = useState(false);
+  const [isEventModalOpen, setIsEventModalOpen] = useState(false);
 
   useEffect(() => {
     if (!roomId) return;
@@ -166,11 +167,10 @@ export default function RoomPage() {
     }
   };
 
-  // モーダルを表示する関数
   const openVoteModal = () => setIsVoteModalOpen(true);
-
-  // モーダルを閉じる関数
   const closeVoteModal = () => setIsVoteModalOpen(false);
+  const openEventModal = () => setIsEventModalOpen(true);
+  const closeEventModal = () => setIsEventModalOpen(false);
 
   // 投票の質問を更新
   const handleVoteQuestionChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -231,6 +231,9 @@ export default function RoomPage() {
             </button>
             {isDropdownOpen && (
               <div className="absolute right-0 mt-2 w-64 p-2 bg-white border border-zinc-200 rounded-lg shadow-lg">
+                <button onClick={openEventModal} className="w-full px-4 py-2 text-left hover:bg-zinc-50 duration-200 rounded-lg">
+                Text Event List
+                </button>
                 <button onClick={openVoteModal} className="w-full px-4 py-2 text-left hover:bg-zinc-50 duration-200 rounded-lg">
                 Create a new vote
                 </button>
@@ -316,7 +319,6 @@ export default function RoomPage() {
         <h2 className="text-xl font-bold">Chat</h2>
         {messages.length > 0 ? (
           messages.map((msg, index) => {
-            // メッセージがスタンプの場合
             const isStamp = msg.text.startsWith("stamp");
 
             return (
@@ -329,7 +331,7 @@ export default function RoomPage() {
                 {isStamp ? (
                   <div className="w-full flex items-center justify-center">
                     <Image
-                      src={`/stamps/${msg.text}.png`} // :stamp1 → /stamps/:stamp1.png
+                      src={`/stamps/${msg.text}.png`}
                       alt={msg.text}
                       width={100}
                       className="w-32"
@@ -337,7 +339,7 @@ export default function RoomPage() {
                     />
                   </div>
                 ) : (
-                  <p>{msg.text}</p>  // スタンプでなければ通常のテキスト
+                  <p>{msg.text}</p>
                 )}
               </div>
             );
@@ -403,6 +405,35 @@ export default function RoomPage() {
                 className="bg-zinc-800 text-white px-4 py-2 rounded-lg outline-none duration-200 focus-visible:ring-2 ring-offset-2"
               >
                 Create Vote
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+        {isEventModalOpen && (
+        <div className="fixed inset-0 flex justify-center items-center bg-zinc-400 bg-opacity-50 backdrop-blur">
+          <div className="bg-white p-6 rounded-lg w-3/4 md:w-1/4">
+            <h2 className="text-lg font-bold mb-4">Text Event List</h2>
+            <div className="flex flex-col space-y-4 mb-4 max-h-32 overflow-y-auto">
+              <div className="flex items-center border p-2 border-zinc-200 rounded-lg">
+                <Image src="/poop.png" alt="Stamp" width={100} height={100} className="w-8" />
+                <p className="ml-2">poop</p>
+              </div>
+              <div className="flex items-center border p-2 border-zinc-200 rounded-lg">
+                <Image src="/stamps/stamp1.png" alt="Stamp" width={100} height={100} className="w-8" />
+                <p className="ml-2">stamp1</p>
+              </div>
+              <div className="flex items-center border p-2 border-zinc-200 rounded-lg">
+                <Image src="/stamps/stamp2.png" alt="Stamp" width={100} height={100} className="w-8" />
+                <p className="ml-2">stamp2</p>
+              </div>
+            </div>  
+            <div className="flex justify-end">
+              <button
+                onClick={closeEventModal}
+                className="bg-zinc-800 text-white px-4 py-2 rounded-lg outline-none duration-200 focus-visible:ring-2 ring-offset-2"
+              >
+                OK
               </button>
             </div>
           </div>
