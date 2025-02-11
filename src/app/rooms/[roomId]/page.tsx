@@ -282,12 +282,16 @@ export default function RoomPage() {
                     <button
                       key={index}
                       onClick={() => handleVote(vote.id, index)}
-                      className="w-full py-2 px-4 bg-zinc-50 rounded-lg"
+                      className="w-full py-2 px-4 bg-zinc-50 rounded-lg relative overflow-hidden"
                     >
-                      {option}
-                      <span className="ml-2 text-sm text-zinc-400">
-                        ({vote.votes[index]})
-                      </span>
+                      <div
+                        className="absolute inset-0 bg-zinc-200"
+                        style={{
+                          width: `${Math.round((vote.votes[index] / vote.votes.reduce((a, b) => a + b, 0)) * 100)}%`
+                        }}
+                      />
+                      <span className="relative">{option}</span>
+                      <span className="ml-2 text-sm relative text-zinc-400">{`(${vote.votes[index]})`}</span>
                     </button>
                   ))}
                 </div>
