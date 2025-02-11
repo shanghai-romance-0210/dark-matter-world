@@ -199,6 +199,17 @@ export default function RoomPage() {
     }
   };  
 
+  const deleteVote = async (voteId: string) => {
+    if (!roomId) return;
+    try {
+      const voteRef = doc(db, "rooms", roomId, "votes", voteId);
+      await deleteDoc(voteRef);
+      console.log("Vote deleted successfully");
+    } catch (error) {
+      console.error("Error deleting vote: ", error);
+    }
+  };  
+
   return (
     <div className="md:max-w-md w-full md:mx-auto p-4 md:py-8">
       <div className="p-4 rounded-lg border border-zinc-200 shadow-sm">
@@ -273,9 +284,17 @@ export default function RoomPage() {
         <h2 className="text-xl font-bold mb-4">Votes</h2>
         <div className="space-y-4">
           {votes.map((vote) => (
-            <div key={vote.id} className="p-4 bg-zinc-50 rounded-lg">
-              <h3 className="font-bold">{vote.question}</h3>
-              <div className="mt-2 space-y-2">
+            <div key={vote.id} className="p-4 bg-zinc-50 shadow-sm rounded-lg">
+              <div className="flex items-center mb-4">
+                <h3 className="font-bold">{vote.question}</h3>
+                <button
+                  onClick={() => deleteVote(vote.id)}
+                  className="ml-auto text-red-600 px-2 py-0.5 text-sm bg-red-50 rounded-lg"
+                >
+                  Delete
+                </button>
+              </div>
+              <div className="space-y-2">
                 {vote.options.map((option: string, index: number) => (
                   <button
                     key={index}
