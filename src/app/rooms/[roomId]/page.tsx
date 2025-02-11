@@ -6,7 +6,7 @@ import { usePathname } from "next/navigation";
 import { FaPaperPlane } from "react-icons/fa";
 import { formatDistanceToNow } from "date-fns"; 
 import Link from "next/link";
-import { FiChevronLeft, FiHelpCircle, FiMoreHorizontal } from "react-icons/fi";
+import { FiChevronLeft, FiMoreHorizontal } from "react-icons/fi";
 
 // メッセージの型定義
 interface Message {
@@ -99,18 +99,12 @@ export default function RoomPage() {
 
   return (
     <div className="md:max-w-md w-full md:mx-auto p-4 md:py-8">
-      <div className="flex items-center mb-4">
-        <Link href="/" className="w-10 h-10 rounded-full duration-200 hover:bg-zinc-200 flex items-center justify-center bg-zinc-50">
-          <FiChevronLeft className="text-xl" />
-        </Link>
-        <Link href="/help" className="w-10 h-10 rounded-full duration-200 hover:bg-zinc-200 flex items-center justify-center ml-auto bg-zinc-50">
-          <FiHelpCircle className="text-xl" />
-        </Link>
-      </div>
-
       <div className="p-4 rounded-lg border border-zinc-200 shadow-sm">
         <div className="flex items-center mb-4">
-          <h1 className="text-xl font-bold">{roomId}</h1>
+          <Link href="/" className="w-8 h-8 rounded-full duration-200 hover:bg-zinc-200 flex items-center justify-center bg-zinc-50">
+            <FiChevronLeft className="text-xl" />
+          </Link>
+          <h1 className="text-xl font-bold mx-2">{roomId}</h1>
           <div className="relative ml-auto">
             <button
               className="w-8 h-8 rounded-full border border-zinc-200 flex items-center justify-center"
@@ -132,11 +126,27 @@ export default function RoomPage() {
           value={username}
           onChange={handleUsernameChange}
           className="px-4 py-2 border border-zinc-200 rounded-lg w-full placeholder:text-zinc-400 outline-none duration-200 focus-visible:ring-2 ring-offset-2"
-          placeholder="Name"
+          placeholder="Your Name"
         />
       </div>
 
-      <div className="space-y-4 my-8 flex flex-col border border-zinc-200 rounded-lg p-4 shadow-sm h-[640px] overflow-y-auto">
+      <div className="my-8 flex md:hidden items-center border border-zinc-200 rounded-lg p-2 shadow-sm sticky top-8 bg-white">
+        <input
+          type="text"
+          value={message}
+          onChange={(e) => setMessage(e.target.value)}
+          className="px-4 py-2 bg-zinc-50 rounded-lg w-full placeholder:text-zinc-400 outline-none duration-200 focus-visible:ring-2 ring-offset-2"
+          placeholder="Enter a message..."
+        />
+        <button
+          onClick={sendMessage}
+          className="bg-zinc-800 text-white w-10 h-10 text-xl aspect-square rounded-lg font-bold whitespace-nowrap flex items-center justify-center ml-2"
+        >
+          <FaPaperPlane />
+        </button>
+      </div>
+
+      <div className="space-y-4 md:my-8 flex flex-col border border-zinc-200 rounded-lg p-4 shadow-sm h-[640px] overflow-y-auto">
         <h2 className="text-xl font-bold">Chat</h2>
         {messages.map((msg, index) => (
           <div key={index} className="p-4 bg-zinc-50 rounded-lg">
@@ -154,7 +164,7 @@ export default function RoomPage() {
         ))}
       </div>
 
-      <div className="flex items-center border border-zinc-200 rounded-lg p-2 shadow-sm sticky bottom-8 bg-white">
+      <div className="hidden md:flex items-center border border-zinc-200 rounded-lg p-2 shadow-sm sticky bottom-8 bg-white">
         <input
           type="text"
           value={message}
