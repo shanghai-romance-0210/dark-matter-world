@@ -126,6 +126,10 @@ export default function RoomPage() {
 
   const sendMessage = async () => {
     if (!message || !roomId || !username) return;
+
+    if (message.toLowerCase() === "poop") {
+      setPoopModalOpen(true);
+    }
   
     try {
       await addDoc(collection(db, "rooms", roomId, "messages"), {
@@ -140,7 +144,6 @@ export default function RoomPage() {
     }
   };  
 
-  // タイムスタンプを「何分前」などの形式で表示
   const formatRelativeTime = (timestamp: Timestamp) => {
     const date = timestamp.toDate();
     return formatDistanceToNow(date, { addSuffix: true });
@@ -157,7 +160,6 @@ export default function RoomPage() {
         await deleteDoc(doc.ref);
       });
 
-      // 次に、ルーム自体を削除
       await deleteDoc(doc(db, "rooms", roomId));
       console.log("Room deleted successfully");
       // ルーム削除後、ページ遷移
@@ -172,7 +174,6 @@ export default function RoomPage() {
   const openEventModal = () => setIsEventModalOpen(true);
   const closeEventModal = () => setIsEventModalOpen(false);
 
-  // 投票の質問を更新
   const handleVoteQuestionChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setVoteQuestion(e.target.value);
   };
