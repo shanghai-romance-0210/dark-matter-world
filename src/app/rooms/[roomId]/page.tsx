@@ -7,6 +7,8 @@ import { FaPaperPlane } from "react-icons/fa";
 import { formatDistanceToNow } from "date-fns"; 
 import Link from "next/link";
 import { FiChevronLeft, FiMoreHorizontal } from "react-icons/fi";
+import Avatar from "@/app/components/Avatar";
+import Image from "next/image";
 
 interface Message {
   text: string;
@@ -34,6 +36,7 @@ export default function RoomPage() {
   const [voteQuestion, setVoteQuestion] = useState("");
   const [voteOptions, setVoteOptions] = useState<string[]>(["", ""]);
   const [votes, setVotes] = useState<Vote[]>([]);
+  const [poopModalOpen, setPoopModalOpen] = useState(false);
 
   useEffect(() => {
     if (!roomId) return;
@@ -123,17 +126,24 @@ export default function RoomPage() {
   // メッセージ送信
   const sendMessage = async () => {
     if (!message || !roomId || !username) return;
+  
     try {
       await addDoc(collection(db, "rooms", roomId, "messages"), {
         text: message,
         createdAt: new Date(),
         username: username,
       });
+  
+      // "poop"メッセージが送られた場合にモーダルを表示
+      if (message.toLowerCase() === "poop") {
+        setPoopModalOpen(true);
+      }
+  
       setMessage("");
     } catch (error) {
       console.error("Error sending message: ", error);
     }
-  };
+  };  
 
   // タイムスタンプを「何分前」などの形式で表示
   const formatRelativeTime = (timestamp: Timestamp) => {
@@ -312,14 +322,10 @@ export default function RoomPage() {
         <h2 className="text-xl font-bold">Chat</h2>
           {messages.length > 0 ? (
             messages.map((msg, index) => (
-              <div key={index} className="p-4 bg-zinc-50 rounded-lg">
+              <div key={index} className="p-4 bg-zinc-50 rounded-lg flex flex-col">
                 <div className="flex items-center mb-2">
-                  <img
-                    src={`https://api.dicebear.com/9.x/thumbs/svg?seed=${msg.username}&backgroundColor=f472b6,facc15,60a5fa,4ade80,c084fc&eyesColor=ffffff&mouthColor=ffffff&shapeColor[]`}
-                    alt="Avatar"
-                    className="bg-white w-8 h-8 rounded-full aspect-square mr-2"
-                  />
-                  <p className="text-sm font-bold mr-2 line-clamp-1">{msg.username}</p>
+                  <Avatar name={msg.username} />
+                  <p className="text-sm font-bold mx-2 line-clamp-1">{msg.username}</p>
                   <p className="text-sm text-zinc-400 whitespace-nowrap">{formatRelativeTime(msg.createdAt)}</p>
                 </div>
                 <p>{msg.text}</p>
@@ -389,6 +395,13 @@ export default function RoomPage() {
               </button>
             </div>
           </div>
+        </div>
+      )}
+      {poopModalOpen && (
+        <div className="fixed inset-0 flex justify-center items-center bg-zinc-400 bg-opacity-50 backdrop-blur">
+          <button onClick={() => setPoopModalOpen(false)} className="w-3/4 md:w-1/4 p-0">
+             <Image src="/poop.png" alt="Image" width={100} height={100} className="w-full" />
+          </button>
         </div>
       )}
     </div>
