@@ -339,7 +339,7 @@ export default function RoomPage() {
               value={voteQuestion}
               onChange={handleVoteQuestionChange}
               placeholder="Enter your question"
-              className="mb-4 w-full px-4 py-2 border border-zinc-200 rounded-lg"
+              className="mb-4 w-full px-4 py-2 border border-zinc-200 rounded-lg outline-none duration-200 focus-visible:ring-2 ring-offset-2"
             />
             {voteOptions.map((option, index) => (
               <input
@@ -348,7 +348,7 @@ export default function RoomPage() {
                 value={option}
                 onChange={(e) => handleVoteOptionChange(e, index)}
                 placeholder={`Option ${index + 1}`}
-                className="mb-2 w-full px-4 py-2 border border-zinc-200 rounded-lg"
+                className="mb-2 w-full px-4 py-2 border border-zinc-200 rounded-lg outline-none duration-200 focus-visible:ring-2 ring-offset-2"
               />
             ))}
             <button
