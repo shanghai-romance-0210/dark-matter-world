@@ -122,7 +122,7 @@ export default function RoomPage() {
     <div className="md:max-w-md w-full md:mx-auto p-4 md:py-8">
       <div className="p-4 rounded-lg border border-zinc-200 shadow-sm">
         <div className="flex items-center mb-4">
-          <Link href="/" className="w-8 h-8 rounded-full duration-200 hover:bg-zinc-200 flex items-center justify-center bg-zinc-50 aspect-square">
+          <Link href="/" className="w-8 h-8 rounded-full duration-200 hover:bg-zinc-200 flex items-center justify-center bg-zinc-50 aspect-square outline-none duration-200 focus-visible:ring-2 ring-offset-2">
             <FiChevronLeft className="text-xl" />
           </Link>
           <h1 className="text-xl font-bold mx-2 line-clamp-1">{roomName || "Loading..."}</h1>
