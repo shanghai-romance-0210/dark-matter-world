@@ -244,7 +244,7 @@ export default function RoomPage() {
           className="px-4 py-2 border border-zinc-200 rounded-lg w-full placeholder:text-zinc-400 outline-none duration-200 focus-visible:ring-2 ring-offset-2"
           placeholder="Your Name"
         />
-              <div className="mt-4 flex md:hidden items-center border border-zinc-200 rounded-lg p-2 shadow-sm sticky top-4 bg-white z-50">
+        <div className="mt-4 flex md:hidden items-center border border-zinc-200 rounded-lg p-2">
         <input
           type="text"
           value={message}
