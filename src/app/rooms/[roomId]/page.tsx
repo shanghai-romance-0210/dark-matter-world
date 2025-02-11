@@ -262,38 +262,40 @@ export default function RoomPage() {
         </button>
       </div>
 
-      <div className="mt-8">
-        <h2 className="text-xl font-bold mb-4">Votes</h2>
-        <div className="space-y-4">
-          {votes.map((vote) => (
-            <div key={vote.id} className="p-4 shadow-sm rounded-lg border border-zinc-200 rounded-lg p-4 shadow-sm bg-white">
-              <div className="flex items-center mb-4">
-                <h3 className="font-bold">{vote.question}</h3>
-                <button
-                  onClick={() => deleteVote(vote.id)}
-                  className="ml-auto text-red-600 px-2 py-0.5 text-sm bg-red-50 rounded-lg"
-                >
-                  Delete
-                </button>
-              </div>
-              <div className="space-y-4">
-                {vote.options.map((option: string, index: number) => (
+      {votes.length > 0 && (
+        <div className="mt-8">
+          <h2 className="text-xl font-bold mb-4">Votes</h2>
+          <div className="space-y-4">
+            {votes.map((vote) => (
+              <div key={vote.id} className="p-4 shadow-sm rounded-lg border border-zinc-200 rounded-lg p-4 shadow-sm bg-white">
+                <div className="flex items-center mb-4">
+                  <h3 className="font-bold">{vote.question}</h3>
                   <button
-                    key={index}
-                    onClick={() => handleVote(vote.id, index)}
-                    className="w-full py-2 px-4 bg-zinc-50 rounded-lg"
+                    onClick={() => deleteVote(vote.id)}
+                    className="ml-auto text-red-600 px-2 py-0.5 text-sm bg-red-50 rounded-lg"
                   >
-                    {option}
+                    Delete
+                  </button>
+                </div>
+                <div className="space-y-4">
+                  {vote.options.map((option: string, index: number) => (
+                    <button
+                      key={index}
+                      onClick={() => handleVote(vote.id, index)}
+                      className="w-full py-2 px-4 bg-zinc-50 rounded-lg"
+                    >
+                      {option}
                       <span className="ml-2 text-sm text-zinc-400">
                         ({vote.votes[index]})
                       </span>
-                  </button>
-                ))}
+                    </button>
+                  ))}
+                </div>
               </div>
-            </div>
-          ))}
+            ))}
+          </div>
         </div>
-      </div>
+      )}
 
       <div className="space-y-4 mt-8 flex flex-col border border-zinc-200 rounded-lg p-4 shadow-sm h-[640px] overflow-y-auto">
         <h2 className="text-xl font-bold">Chat</h2>
