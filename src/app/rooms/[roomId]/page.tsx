@@ -246,6 +246,22 @@ export default function RoomPage() {
         />
       </div>
 
+      <div className="my-8 flex md:hidden items-center border border-zinc-200 rounded-lg p-2 shadow-sm sticky top-4 bg-white">
+        <input
+          type="text"
+          value={message}
+          onChange={(e) => setMessage(e.target.value)}
+          className="px-4 py-2 bg-zinc-50 rounded-lg w-full placeholder:text-zinc-400 outline-none duration-200 focus-visible:ring-2 ring-offset-2"
+          placeholder="Enter a message..."
+        />
+        <button
+          onClick={sendMessage}
+          className="bg-zinc-800 text-white w-10 h-10 text-xl aspect-square rounded-lg font-bold whitespace-nowrap flex items-center justify-center ml-2"
+        >
+          <FaPaperPlane />
+        </button>
+      </div>
+
       {votes.length > 0 && (
         <div className="mt-8">
           <h2 className="text-xl font-bold mb-4">Votes</h2>
@@ -317,7 +333,7 @@ export default function RoomPage() {
           )}
       </div>
 
-      <div className="mt-8 flex items-center border border-zinc-200 rounded-lg p-2 shadow-sm sticky bottom-8 bg-white">
+      <div className="mt-8 hidden md:flex items-center border border-zinc-200 rounded-lg p-2 shadow-sm sticky bottom-8 bg-white">
         <input
           type="text"
           value={message}
