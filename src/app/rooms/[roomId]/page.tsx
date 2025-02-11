@@ -1,7 +1,7 @@
 "use client"
 import { useState, useEffect } from "react";
 import { db } from "@/lib/firebaseConfig";
-import { collection, addDoc, query, orderBy, onSnapshot, Timestamp, doc, deleteDoc, getDocs } from "firebase/firestore";
+import { collection, addDoc, query, orderBy, onSnapshot, Timestamp, doc, deleteDoc, getDocs, getDoc } from "firebase/firestore";
 import { usePathname } from "next/navigation"; 
 import { FaPaperPlane } from "react-icons/fa";
 import { formatDistanceToNow } from "date-fns"; 
@@ -22,6 +22,7 @@ export default function RoomPage() {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false); // ドロップダウンの開閉状態
   const pathname = usePathname();
   const roomId = pathname.split("/").pop();
+  const [roomName, setRoomName] = useState("");
 
   // ユーザー名の設定
   const handleUsernameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -52,6 +53,26 @@ export default function RoomPage() {
 
     if (roomId) {
       fetchMessages();
+    }
+  }, [roomId]);
+
+  useEffect(() => {
+    const fetchRoomName = async () => {
+      if (!roomId) return;
+      try {
+        const roomRef = doc(db, "rooms", roomId);
+        const roomSnapshot = await getDoc(roomRef);
+        if (roomSnapshot.exists()) {
+          // Set the room name to the state
+          setRoomName(roomSnapshot.data().name);
+        }
+      } catch (error) {
+        console.error("Error fetching room name: ", error);
+      }
+    };
+  
+    if (roomId) {
+      fetchRoomName();
     }
   }, [roomId]);
 
@@ -101,10 +122,10 @@ export default function RoomPage() {
     <div className="md:max-w-md w-full md:mx-auto p-4 md:py-8">
       <div className="p-4 rounded-lg border border-zinc-200 shadow-sm">
         <div className="flex items-center mb-4">
-          <Link href="/" className="w-8 h-8 rounded-full duration-200 hover:bg-zinc-200 flex items-center justify-center bg-zinc-50">
+          <Link href="/" className="w-8 h-8 rounded-full duration-200 hover:bg-zinc-200 flex items-center justify-center bg-zinc-50 aspect-square">
             <FiChevronLeft className="text-xl" />
           </Link>
-          <h1 className="text-xl font-bold mx-2">{roomId}</h1>
+          <h1 className="text-xl font-bold mx-2 line-clamp-1">{roomName || "Loading..."}</h1>
           <div className="relative ml-auto">
             <button
               className="w-8 h-8 rounded-full border border-zinc-200 flex items-center justify-center"
