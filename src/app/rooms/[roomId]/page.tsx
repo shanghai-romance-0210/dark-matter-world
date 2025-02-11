@@ -246,7 +246,7 @@ export default function RoomPage() {
         />
       </div>
 
-      <div className="my-8 flex md:hidden items-center border border-zinc-200 rounded-lg p-2 shadow-sm sticky top-4 bg-white">
+      <div className="my-8 flex md:hidden items-center border border-zinc-200 rounded-lg p-2 shadow-sm sticky top-4 bg-white z-50">
         <input
           type="text"
           value={message}
