@@ -303,7 +303,7 @@ export default function RoomPage() {
                       }}
                     />
                     <span className="relative">{option}</span>
-                    <span className="ml-2 text-sm relative text-zinc-400">
+                    <span className="ml-2 text-sm relative text-zinc-400 roboto">
                       {`(${vote.votes[index]})`}
                     </span>
                   </button>
@@ -320,14 +320,14 @@ export default function RoomPage() {
         <h2 className="text-xl font-bold">Chat</h2>
         {messages.length > 0 ? (
           messages.map((msg, index) => {
-            const isStamp = msg.text.trim().startsWith("stamp") && !msg.text.trim().includes(" ");
+            const isStamp = msg.text.trim().startsWith("stamp") && !msg.text.trim().includes(" ") && !msg.text.trim().includes("　");
 
             return (
               <div key={index} className="p-4 bg-zinc-50 rounded-lg flex flex-col">
                 <div className="flex items-center mb-2">
                   <Avatar name={msg.username} />
                   <p className="text-sm font-bold mx-2 line-clamp-1">{msg.username}</p>
-                  <p className="text-sm text-zinc-400 whitespace-nowrap">{formatRelativeTime(msg.createdAt)}</p>
+                  <p className="text-sm text-zinc-400 whitespace-nowrap roboto">{formatRelativeTime(msg.createdAt)}</p>
                 </div>
                 {isStamp ? (
                   <div className="w-full flex items-center justify-center">

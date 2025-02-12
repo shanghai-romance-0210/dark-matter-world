@@ -67,14 +67,14 @@ export default function Home() {
           type="text"
           value={roomName}
           onChange={(e) => setRoomName(e.target.value)}
-          className="px-4 py-2 border border-zinc-200 rounded-lg mb-4 w-full placeholder:text-zinc-400 outline-none duration-200 focus-visible:ring-2 ring-offset-2"
+          className="roboto px-4 py-2 border border-zinc-200 rounded-lg mb-4 w-full placeholder:text-zinc-400 outline-none duration-200 focus-visible:ring-2 ring-offset-2"
           placeholder="Room Name"
         />
         <input
           type="text"
           value={roomId}
           onChange={(e) => setRoomId(e.target.value.toLowerCase())} // 入力を小文字に変換
-          className="px-4 py-2 border border-zinc-200 rounded-lg mb-4 w-full placeholder:text-zinc-400 outline-none duration-200 focus-visible:ring-2 ring-offset-2"
+          className="roboto px-4 py-2 border border-zinc-200 rounded-lg mb-4 w-full placeholder:text-zinc-400 outline-none duration-200 focus-visible:ring-2 ring-offset-2"
           placeholder="Room ID"
         />
 
@@ -99,7 +99,7 @@ export default function Home() {
               <div key={index} className="p-4 rounded-lg bg-zinc-50 shadow-sm flex items-center">
                 <div className="mr-4">
                   <p className="font-bold line-clamp-2">{room.name}</p>
-                  <p className="text-sm text-zinc-400 mt-0.5">{room.id}</p>
+                  <p className="text-sm text-zinc-400 mt-0.5 roboto">{room.id}</p>
                 </div>
                 <div className="ml-auto flex">
                   <Link href={`/rooms/${room.id}`} className="rounded-full outline-none duration-200 focus-visible:ring-2 ring-offset-2">
