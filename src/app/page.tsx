@@ -67,14 +67,14 @@ export default function Home() {
           type="text"
           value={roomName}
           onChange={(e) => setRoomName(e.target.value)}
-          className="roboto px-4 py-2 border border-zinc-200 rounded-lg mb-4 w-full placeholder:text-zinc-400 outline-none duration-200 focus-visible:ring-2 ring-offset-2"
+          className="px-4 py-2 border border-zinc-200 rounded-lg mb-4 w-full placeholder:text-zinc-400 outline-none duration-200 focus-visible:ring-2 ring-offset-2"
           placeholder="Room Name"
         />
         <input
           type="text"
           value={roomId}
           onChange={(e) => setRoomId(e.target.value.toLowerCase())} // 入力を小文字に変換
-          className="roboto px-4 py-2 border border-zinc-200 rounded-lg mb-4 w-full placeholder:text-zinc-400 outline-none duration-200 focus-visible:ring-2 ring-offset-2"
+          className="px-4 py-2 border border-zinc-200 rounded-lg mb-4 w-full placeholder:text-zinc-400 outline-none duration-200 focus-visible:ring-2 ring-offset-2"
           placeholder="Room ID"
         />
 
