@@ -306,14 +306,14 @@ export default function RoomPage() {
         </div>
       )}
 
-      <div className="space-y-4 mt-8 flex flex-col border border-zinc-200 rounded-lg p-4 shadow-sm max-h-[640px] overflow-y-auto">
+      <div className="space-y-4 mt-8 flex flex-col max-h-[640px] overflow-y-auto">
         <h2 className="text-xl font-bold">Chat</h2>
         {messages.length > 0 ? (
           messages.map((msg, index) => {
             const isStamp = msg.text.trim().startsWith("stamp") && !msg.text.trim().includes(" ") && !msg.text.trim().includes("　");
 
             return (
-              <div key={index} className="p-4 bg-zinc-50 rounded-lg flex flex-col">
+              <div key={index} className="p-4 bg-zinc-50 rounded-lg flex flex-col shadow-sm">
                 <div className="flex items-center mb-2">
                   <Avatar name={msg.username} />
                   <p className="text-sm font-bold mx-2 line-clamp-1">{msg.username}</p>
