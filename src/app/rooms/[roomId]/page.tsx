@@ -222,7 +222,7 @@ export default function RoomPage() {
           <Link href="/" className="w-8 h-8 rounded-full duration-200 border border-zinc-200 flex items-center justify-center aspect-square outline-none duration-200 focus-visible:ring-2 ring-offset-2">
             <FiChevronLeft className="text-xl" />
           </Link>
-          <h1 className="text-xl font-bold mx-2 line-clamp-1">{roomName || "Loading..."}</h1>
+          <h1 className="font-bold mx-2 line-clamp-1">{roomName || "Loading..."}</h1>
           <div className="relative ml-auto">
             <button
               className="w-8 h-8 rounded-full border border-zinc-200 flex items-center justify-center duration-200 bg-white outline-none focus-visible:ring-2 ring-offset-2"
@@ -245,27 +245,17 @@ export default function RoomPage() {
             )}
           </div>
         </div>
-        <input
-          type="text"
-          value={username}
-          onChange={handleUsernameChange}
-          className="px-4 py-2 bg-zinc-50 rounded-lg w-full placeholder:text-zinc-400 outline-none duration-200 focus-visible:ring-2 ring-offset-2"
-          placeholder="Your Name"
-        />
-        <textarea
-          value={message}
-          onChange={(e) => setMessage(e.target.value)}
-          className="md:hidden mt-2 px-4 py-2 bg-zinc-50 rounded-lg w-full placeholder:text-zinc-400 outline-none duration-200 focus-visible:ring-2 ring-offset-2"
-          placeholder="Enter a message..."
-          rows={2}
-        />
-        <div className="flex mt-2 md:hidden">
-          <button
-            onClick={sendMessage}
-            className="bg-zinc-800 text-white w-8 h-8 aspect-square rounded-lg font-bold whitespace-nowrap flex items-center justify-center ml-auto"
-          >
-            <FaPaperPlane />
-          </button>
+        <div className="flex flex-col">
+          <input type="text" value={username} onChange={handleUsernameChange} className="px-4 py-2 bg-zinc-50 rounded-lg w-full placeholder:text-zinc-400 outline-none duration-200 focus-visible:ring-2 ring-offset-2" placeholder="Your Name" />
+          <textarea value={message} onChange={(e) => setMessage(e.target.value)} className="md:hidden mt-2 px-4 py-2 bg-zinc-50 rounded-lg w-full placeholder:text-zinc-400 outline-none duration-200 focus-visible:ring-2 ring-offset-2" placeholder="Enter a message..." rows={2}/>
+          <div className="mt-2 flex md:hidden">
+            <button
+              onClick={sendMessage}
+              className="bg-zinc-800 text-white w-8 h-8 aspect-square rounded-lg flex items-center justify-center ml-auto"
+            >
+              <FaPaperPlane />
+            </button>
+          </div>
         </div>
       </div>
 
