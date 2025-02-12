@@ -219,7 +219,7 @@ export default function RoomPage() {
     <div className="md:max-w-md w-full md:mx-auto p-4 md:py-8">
       <div className="p-4 rounded-lg border border-zinc-200 shadow-sm">
         <div className="flex items-center mb-4">
-          <Link href="/" className="w-8 h-8 rounded-full duration-200 hover:bg-zinc-200 flex items-center justify-center bg-zinc-50 aspect-square outline-none duration-200 focus-visible:ring-2 ring-offset-2">
+          <Link href="/" className="w-8 h-8 rounded-full duration-200 border border-zinc-200 flex items-center justify-center aspect-square outline-none duration-200 focus-visible:ring-2 ring-offset-2">
             <FiChevronLeft className="text-xl" />
           </Link>
           <h1 className="text-xl font-bold mx-2 line-clamp-1">{roomName || "Loading..."}</h1>
@@ -249,24 +249,24 @@ export default function RoomPage() {
           type="text"
           value={username}
           onChange={handleUsernameChange}
-          className="px-4 py-2 border border-zinc-200 rounded-lg w-full placeholder:text-zinc-400 outline-none duration-200 focus-visible:ring-2 ring-offset-2"
+          className="px-4 py-2 bg-zinc-50 rounded-lg w-full placeholder:text-zinc-400 outline-none duration-200 focus-visible:ring-2 ring-offset-2"
           placeholder="Your Name"
         />
-        <div className="mt-4 flex md:hidden items-center">
-        <input
-          type="text"
+        <textarea
           value={message}
           onChange={(e) => setMessage(e.target.value)}
-          className="px-4 py-2 border border-zinc-200 rounded-lg w-full placeholder:text-zinc-400 outline-none duration-200 focus-visible:ring-2 ring-offset-2"
+          className="md:hidden mt-2 px-4 py-2 bg-zinc-50 rounded-lg w-full placeholder:text-zinc-400 outline-none duration-200 focus-visible:ring-2 ring-offset-2"
           placeholder="Enter a message..."
+          rows={2}
         />
-        <button
-          onClick={sendMessage}
-          className="bg-zinc-800 text-white w-10 h-10 text-xl aspect-square rounded-lg font-bold whitespace-nowrap flex items-center justify-center ml-4 placeholder:text-zinc-400"
-        >
-          <FaPaperPlane />
-        </button>
-      </div>
+        <div className="flex mt-2 md:hidden">
+          <button
+            onClick={sendMessage}
+            className="bg-zinc-800 text-white w-8 h-8 aspect-square rounded-lg font-bold whitespace-nowrap flex items-center justify-center ml-auto"
+          >
+            <FaPaperPlane />
+          </button>
+        </div>
       </div>
 
       {votes.length > 0 && (
@@ -340,7 +340,7 @@ export default function RoomPage() {
                     />
                   </div>
                 ) : (
-                  <p>{msg.text}</p>
+                  <p className="whitespace-pre-wrap">{msg.text}</p>
                 )}
               </div>
             );
@@ -352,20 +352,22 @@ export default function RoomPage() {
         )}
       </div>
 
-      <div className="mt-8 hidden md:flex items-center border border-zinc-200 rounded-lg p-2 shadow-sm sticky bottom-8 bg-white">
-        <input
-          type="text"
+      <div className="mt-8 hidden md:flex flex-col border border-zinc-200 rounded-lg p-2 shadow-sm sticky bottom-8 bg-white">
+        <textarea
           value={message}
           onChange={(e) => setMessage(e.target.value)}
           className="px-4 py-2 bg-zinc-50 rounded-lg w-full placeholder:text-zinc-400 outline-none duration-200 focus-visible:ring-2 ring-offset-2"
           placeholder="Enter a message..."
+          rows={2}
         />
-        <button
-          onClick={sendMessage}
-          className="bg-zinc-800 text-white w-10 h-10 text-xl aspect-square rounded-lg font-bold whitespace-nowrap flex items-center justify-center ml-2 outline-none duration-200 focus-visible:ring-2 ring-offset-2"
-        >
-          <FaPaperPlane />
-        </button>
+        <div className="flex mt-2">
+          <button
+            onClick={sendMessage}
+            className="ml-auto bg-zinc-800 text-white w-8 h-8 aspect-square rounded-lg font-bold whitespace-nowrap flex items-center justify-center outline-none duration-200 focus-visible:ring-2 ring-offset-2"
+          >
+            <FaPaperPlane />
+          </button>
+        </div>
       </div>
       {isVoteModalOpen && (
         <div className="fixed inset-0 flex justify-center items-center bg-zinc-400 bg-opacity-50 backdrop-blur">
