@@ -19,3 +19,7 @@ body {
 .roboto {
   font-family: "Roboto", Arial, Helvetica, sans-serif;
 }
+
+.menu-button {
+  margin-bottom: -27px;
+}

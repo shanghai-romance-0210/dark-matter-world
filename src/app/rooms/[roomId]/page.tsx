@@ -6,7 +6,7 @@ import { usePathname } from "next/navigation";
 import { FaPaperPlane } from "react-icons/fa";
 import { formatDistanceToNow } from "date-fns"; 
 import Link from "next/link";
-import { FiChevronLeft, FiList, FiMoreHorizontal, FiPlus, FiTrash } from "react-icons/fi";
+import { FiChevronDown, FiChevronLeft, FiChevronUp, FiList, FiMoreHorizontal, FiPlus, FiTrash } from "react-icons/fi";
 import Avatar from "@/app/components/Avatar";
 import Image from "next/image";
 
@@ -38,6 +38,7 @@ export default function RoomPage() {
   const [votes, setVotes] = useState<Vote[]>([]);
   const [poopModalOpen, setPoopModalOpen] = useState(false);
   const [isEventModalOpen, setIsEventModalOpen] = useState(false);
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   useEffect(() => {
     if (!roomId) return;
@@ -219,9 +220,9 @@ export default function RoomPage() {
   return (
     <div className="md:max-w-md w-full md:mx-auto p-4 md:py-8">
       <div className="p-4 rounded-lg border border-zinc-200 shadow-sm">
-        <div className="flex items-center mb-4">
+        <div className="flex items-center">
           <Link href="/" className="w-8 h-8 rounded-full duration-200 border border-zinc-200 flex items-center justify-center aspect-square outline-none duration-200 focus-visible:ring-2 ring-offset-2">
-            <FiChevronLeft className="text-xl" />
+            <FiChevronLeft />
           </Link>
           <h1 className="font-bold mx-2 line-clamp-1">{roomName || "Loading..."}</h1>
           <div className="relative ml-auto">
@@ -245,18 +246,21 @@ export default function RoomPage() {
               </div>
           </div>
         </div>
-        <div className="flex flex-col">
+        {isMenuOpen && (
+        <div className="flex flex-col mt-4">
           <input type="text" value={username} onChange={handleUsernameChange} className="px-4 py-2 bg-zinc-50 rounded-lg w-full placeholder:text-zinc-400 outline-none duration-200 focus-visible:ring-2 ring-offset-2" placeholder="Your Name" />
           <textarea value={message} onChange={(e) => setMessage(e.target.value)} className="md:hidden mt-2 px-4 py-2 bg-zinc-50 rounded-lg w-full placeholder:text-zinc-400 outline-none duration-200 focus-visible:ring-2 ring-offset-2" placeholder="Enter a message..." rows={2}/>
           <div className="mt-2 flex md:hidden">
-            <button
-              onClick={sendMessage}
-              className="bg-zinc-800 text-white w-8 h-8 aspect-square rounded-lg flex items-center justify-center ml-auto"
-            >
+            <button onClick={sendMessage} className="bg-zinc-800 text-white w-8 h-8 aspect-square rounded-lg flex items-center justify-center ml-auto">
               <FaPaperPlane />
             </button>
           </div>
         </div>
+        )}
+
+        <button onClick={() => setIsMenuOpen(!isMenuOpen)} className="outline-none duration-200 focus-visible:ring-2 ring-offset-2 mt-2 mx-auto bg-white menu-button px-2 py-0.5 rounded-full border border-zinc-200 flex items-center justify-center shadow-sm">
+          {isMenuOpen ? <FiChevronUp /> : <FiChevronDown />}
+        </button>
       </div>
 
       {votes.length > 0 && (
