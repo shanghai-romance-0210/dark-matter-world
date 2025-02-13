@@ -221,7 +221,7 @@ export default function RoomPage() {
     <div className="md:max-w-md w-full md:mx-auto p-4 md:py-8">
       <div className="p-4 rounded-lg border border-zinc-200 shadow-sm">
         <div className="flex items-center">
-          <Link href="/" className="w-8 h-8 rounded-full duration-200 border border-zinc-200 flex items-center justify-center aspect-square outline-none duration-200 focus-visible:ring-2 ring-offset-2">
+          <Link href="/" className="duration-200 flex outline-none duration-200 focus-visible:ring-2 ring-offset-2">
             <FiChevronLeft />
           </Link>
           <h1 className="font-bold mx-2 line-clamp-1">{roomName || "Loading..."}</h1>
@@ -258,7 +258,7 @@ export default function RoomPage() {
         </div>
         )}
 
-        <button onClick={() => setIsMenuOpen(!isMenuOpen)} className="outline-none duration-200 focus-visible:ring-2 ring-offset-2 mt-2 mx-auto bg-white menu-button px-2 py-0.5 rounded-full border border-zinc-200 flex items-center justify-center shadow-sm">
+        <button onClick={() => setIsMenuOpen(!isMenuOpen)} className="outline-none duration-200 focus-visible:ring-2 ring-offset-2 mt-2 mx-auto bg-white menu-button w-8 h-4 text-zinc-400 rounded-full border border-zinc-200 flex items-center justify-center shadow-sm">
           {isMenuOpen ? <FiChevronUp /> : <FiChevronDown />}
         </button>
       </div>
