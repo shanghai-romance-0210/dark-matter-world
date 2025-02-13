@@ -7,7 +7,7 @@ import { FaPaperPlane } from "react-icons/fa";
 import { formatDistanceToNow } from "date-fns"; 
 import Link from "next/link";
 import { FiChevronDown, FiChevronLeft, FiChevronUp, FiList, FiMoreHorizontal, FiPlus, FiTrash } from "react-icons/fi";
-import Avatar from "@/app/components/Avatar";
+import Avatar from "@/components/Avatar";
 import Image from "next/image";
 
 interface Message {
