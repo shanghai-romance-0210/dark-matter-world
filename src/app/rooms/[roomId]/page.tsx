@@ -356,10 +356,7 @@ export default function RoomPage() {
           rows={2}
         />
         <div className="flex mt-2">
-          <button
-            onClick={sendMessage}
-            className="ml-auto bg-zinc-800 text-white w-8 h-8 aspect-square rounded-lg font-bold whitespace-nowrap flex items-center justify-center outline-none duration-200 focus-visible:ring-2 ring-offset-2"
-          >
+          <button onClick={sendMessage} className="ml-auto bg-zinc-800 text-white w-8 h-8 aspect-square rounded-lg font-bold whitespace-nowrap flex items-center justify-center outline-none duration-200 focus-visible:ring-2 ring-offset-2">
             <FaPaperPlane />
           </button>
         </div>
