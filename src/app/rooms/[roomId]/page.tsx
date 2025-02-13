@@ -289,7 +289,7 @@ export default function RoomPage() {
                     className="w-full py-2 px-4 rounded-lg relative overflow-hidden bg-zinc-50"
                   >
                     <div
-                      className={`absolute inset-0 ${hasVotes ? 'bg-zinc-200' : 'bg-zinc-50'}`}
+                      className={`absolute inset-0 ${hasVotes ? 'bg-green-400' : 'bg-zinc-50'}`}
                       style={{
                         width: hasVotes
                           ? `${Math.round((vote.votes[index] / totalVotes) * 100)}%`
@@ -297,7 +297,7 @@ export default function RoomPage() {
                       }}
                     />
                     <span className="relative">{option}</span>
-                    <span className="ml-2 text-sm relative text-zinc-400 roboto">
+                    <span className="ml-2 text-sm relative opacity-50 roboto">
                       {`(${vote.votes[index]})`}
                     </span>
                   </button>
