@@ -283,7 +283,7 @@ export default function RoomPage() {
                 const totalVotes = vote.votes.reduce((a, b) => a + b, 0);
                 const hasVotes = totalVotes > 0;
                 return (
-                  <div key={index} className="space-y-0.5">
+                  <div key={index} className="space-y-2">
                     <div className="flex items-center">
                       <p>{option}</p>
                       <span className="ml-2 text-sm relative text-zinc-400 roboto">{`(${vote.votes[index]})`}</span>
