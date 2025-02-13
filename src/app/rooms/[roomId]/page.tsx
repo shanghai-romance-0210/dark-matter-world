@@ -225,7 +225,7 @@ export default function RoomPage() {
             <FiChevronLeft />
           </Link>
           <h1 className="font-bold mx-2 line-clamp-1">{roomName || "Loading..."}</h1>
-          <div className="relative ml-auto">
+          <div className="relative ml-auto z-10">
             <button
               className="w-8 h-8 rounded-full border border-zinc-200 flex items-center justify-center duration-200 bg-white outline-none focus-visible:ring-2 ring-offset-2"
               onClick={() => setIsDropdownOpen(!isDropdownOpen)} // ドロップダウンの開閉
@@ -283,24 +283,25 @@ export default function RoomPage() {
                 const totalVotes = vote.votes.reduce((a, b) => a + b, 0);
                 const hasVotes = totalVotes > 0;
                 return (
-                  <button
-                    key={index}
-                    onClick={() => handleVote(vote.id, index)}
-                    className="w-full py-2 px-4 rounded-lg relative overflow-hidden bg-zinc-50"
-                  >
-                    <div
-                      className={`absolute inset-0 ${hasVotes ? 'bg-green-400' : 'bg-zinc-50'}`}
-                      style={{
-                        width: hasVotes
-                          ? `${Math.round((vote.votes[index] / totalVotes) * 100)}%`
-                          : '0%'
-                      }}
-                    />
-                    <span className="relative">{option}</span>
-                    <span className="ml-2 text-sm relative opacity-50 roboto">
-                      {`(${vote.votes[index]})`}
-                    </span>
-                  </button>
+                  <div key={index} className="space-y-2">
+                    <div className="flex items-center">
+                      <p>{option}</p>
+                      <span className="ml-2 text-sm relative text-zinc-400 roboto">{`(${vote.votes[index]})`}</span>
+                    </div>
+                    <button
+                      onClick={() => handleVote(vote.id, index)}
+                      className="w-full h-8 rounded-lg relative overflow-hidden bg-zinc-50"
+                    >
+                      <div
+                        className={`absolute inset-0 ${hasVotes ? 'bg-green-400' : 'bg-zinc-50'}`}
+                        style={{
+                          width: hasVotes
+                            ? `${Math.round((vote.votes[index] / totalVotes) * 100)}%`
+                            : '0%'
+                        }}
+                      />
+                    </button>
+                  </div>
                 );
               })}
                 </div>
@@ -364,7 +365,7 @@ export default function RoomPage() {
         </div>
       </div>
       {isVoteModalOpen && (
-        <div className="fixed inset-0 flex justify-center items-center bg-zinc-400 bg-opacity-50 backdrop-blur">
+        <div className="z-50 fixed inset-0 flex justify-center items-center bg-zinc-400 bg-opacity-50 backdrop-blur">
           <div className="bg-white p-6 rounded-lg w-3/4 md:w-1/4">
             <h2 className="text-lg font-bold mb-4">Create a New Vote</h2>
             <input
@@ -408,7 +409,7 @@ export default function RoomPage() {
         </div>
       )}
         {isEventModalOpen && (
-        <div className="fixed inset-0 flex justify-center items-center bg-zinc-400 bg-opacity-50 backdrop-blur">
+        <div className="z-50 fixed inset-0 flex justify-center items-center bg-zinc-400 bg-opacity-50 backdrop-blur">
           <div className="bg-white p-6 rounded-lg w-3/4 md:w-1/4">
             <h2 className="text-lg font-bold mb-4">Text Event List</h2>
             <div className="flex flex-col space-y-4 mb-4 max-h-32 overflow-y-auto">
@@ -441,7 +442,7 @@ export default function RoomPage() {
         </div>
       )}
       {poopModalOpen && (
-        <div className="fixed inset-0 flex justify-center items-center bg-zinc-400 bg-opacity-50 backdrop-blur">
+        <div className="z-50 fixed inset-0 flex justify-center items-center bg-zinc-400 bg-opacity-50 backdrop-blur">
           <button onClick={() => setPoopModalOpen(false)} className="w-3/4 md:w-1/4 p-0">
              <Image src="/poop.png" alt="Image" width={100} height={100} className="w-full" />
           </button>
