@@ -13,7 +13,7 @@ const Avatar: React.FC<AvatarProps> = ({ name, size = 'md' }) => {
     lg: 'w-16 h-16', // large size
   };
 
-  const imageUrl = `https://api.dicebear.com/9.x/thumbs/svg?seed=${name}&backgroundColor=f472b6,facc15,60a5fa,4ade80,c084fc&eyesColor=ffffff&mouthColor=ffffff&shapeColor[]`;
+  const imageUrl = `https://api.dicebear.com/9.x/thumbs/svg?seed=${name}&backgroundColor=f472b6,facc15,60a5fa,4ade80,c084fc,27272a&eyesColor=ffffff&mouthColor=ffffff&shapeColor[]`;
 
   return (
     <img
