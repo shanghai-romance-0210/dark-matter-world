@@ -90,19 +90,21 @@ body {
   background-color: #e4e4e7;
   padding: 2px 4px;
   border-radius: 4px;
+  color: #52525b;
+  font-size: 90%;
 }
 
 .md hr {
   border: 0;
   border-top: 1px solid #e4e4e7;
-  margin: 1rem 0;
+  margin: 16px 0;
 }
 
-/* テーブル */
 .md table {
   width: 100%;
   border-collapse: collapse;
   background-color: white;
+  font-family: "Roboto", Arial, Helvetica, sans-serif;
 }
 
 .md th, td {
