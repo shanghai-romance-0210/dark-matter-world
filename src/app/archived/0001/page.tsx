@@ -1,8 +1,7 @@
 export default function Archive() {
     return (
         <div className="md:max-w-md w-full md:mx-auto p-4 md:py-8 font-sans shippori-mincho-regular">
-            <h1 className="font-bold text-xl text-center mb-2">尿惑（にょうわく）</h1>
-            <p className="text-center">ChatGPT</p>
+            <h1 className="font-bold text-xl text-center">尿惑（にょうわく）</h1>
 
             <div className="mt-8 space-y-4">
                 <h2 className="font-bold">第一章: 不穏な予兆</h2>
