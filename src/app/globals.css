@@ -25,6 +25,94 @@ body {
   margin-bottom: -24px;
 }
 
-.serif {
-  font-family: "Noto Serif JP", serif;
+.md h1, h2, h3, h4, h5, h6 {
+  font-weight: bold;
+}
+
+.md h1 {
+  font-size: 1.5rem;
+}
+
+.md h2 {
+  font-size: 1.25rem;
+}
+
+.md h3 {
+  font-size: 1.5rem;
+}
+
+.md h4 {
+  font-size: 1.25rem;
+}
+
+.md h5 {
+  font-size: 1.1rem;
+}
+
+.md h6 {
+  font-size: 1rem;
+}
+
+.md strong {
+  font-weight: bold;
+}
+
+.md em {
+  font-style: italic;
+}
+
+.md ul, ol {
+  padding-left: 2rem;
+}
+
+.md li {
+  margin-bottom: 0.5rem;
+}
+
+/* 引用ブロック */
+.md blockquote {
+  border-left: 4px solid #ccc;
+  padding-left: 1rem;
+  margin: 1rem 0;
+  font-style: italic;
+  color: #555;
+}
+
+/* コードブロック */
+.md pre {
+  background-color: #f7f7f7;
+  padding: 1rem;
+  border-radius: 4px;
+  overflow-x: auto;
+}
+
+/* インラインコード */
+.md code {
+  background-color: #f5f5f5;
+  padding: 2px 4px;
+  border-radius: 4px;
+  font-size: 0.9rem;
+}
+
+/* 水平線 */
+.md hr {
+  border: 0;
+  border-top: 1px solid #e4e4e7;
+  margin: 1rem 0;
+}
+
+/* テーブル */
+.md table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 1rem;
+}
+
+.md th, td {
+  padding: 8px;
+  border: 1px solid #ddd;
+}
+
+.md th {
+  background-color: #f4f4f4;
 }

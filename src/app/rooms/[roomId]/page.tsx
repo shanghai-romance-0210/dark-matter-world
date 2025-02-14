@@ -9,6 +9,7 @@ import Link from "next/link";
 import { FiChevronDown, FiChevronLeft, FiChevronUp, FiList, FiMoreHorizontal, FiPlus, FiTrash } from "react-icons/fi";
 import Avatar from "@/components/Avatar";
 import Image from "next/image";
+import { marked } from "marked";
 
 interface Message {
   text: string;
@@ -217,6 +218,11 @@ export default function RoomPage() {
     }
   };
 
+  const renderMarkdown = (text: string) => {
+    // `marked`を使ってマークダウンをHTMLに変換
+    return marked(text);
+  };  
+
   return (
     <div className="md:max-w-md w-full md:mx-auto p-4 md:py-8">
       <div className="p-4 rounded-lg border border-zinc-200 shadow-sm">
@@ -335,8 +341,11 @@ export default function RoomPage() {
                     />
                   </div>
                 ) : (
-                  <p className="whitespace-pre-wrap">{msg.text}</p>
-                )}
+                <div
+                  className="whitespace-pre-wrap md h-fit flex flex-col"
+                  dangerouslySetInnerHTML={{ __html: renderMarkdown(msg.text) }}
+                />
+                  )}
               </div>
             );
           })
