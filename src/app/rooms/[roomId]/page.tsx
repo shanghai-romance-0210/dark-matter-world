@@ -238,7 +238,7 @@ export default function RoomPage() {
             >
               <FiMoreHorizontal />
             </button>
-              <div className={`absolute right-0 mt-2 w-64 p-2 bg-white border border-zinc-200 rounded-lg shadow-lg overflow-hidden transition-all duration-200 ease-in-out ${ isDropdownOpen ? "scale-100 opacity-100" : "scale-95 opacity-0 pointer-events-none"}`}>
+              <div className={`absolute right-0 mt-2 w-64 p-2 bg-white border border-zinc-200 roboto rounded-lg shadow-lg overflow-hidden transition-all duration-200 ease-in-out ${ isDropdownOpen ? "scale-100 opacity-100" : "scale-95 opacity-0 pointer-events-none"}`}>
                 <button onClick={openEventModal} className="w-full px-4 py-2 text-left hover:bg-zinc-50 duration-200 rounded-lg flex items-center">
                 <FiList className="mr-2 text-zinc-400" />Text Event List
                 </button>

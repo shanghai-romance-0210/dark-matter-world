@@ -7,6 +7,7 @@ export default function Archive() {
 
             <ul className="mt-8">
                 <Link href="/archived/0001"><li className="list-disc list-inside hover:underline">尿惑（にょうわく）</li></Link>
+                <Link href="/archived/0002"><li className="list-disc list-inside hover:underline">糞時（くそどき）</li></Link>
             </ul>
         </div>
     )
