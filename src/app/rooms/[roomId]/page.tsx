@@ -269,7 +269,7 @@ export default function RoomPage() {
                         className="w-10 h-10 aspect-square hover:bg-zinc-200 duration-200 rounded-lg flex items-center justify-center"
                       >
                         <img
-                          src={`https://api.dicebear.com/9.x/open-peeps/svg?seed=${stamp}&accessories[]&clothingColor=e78276&face=cyclops,monster&facialHair[]&head=bear&headContrastColor[]&mask[]&skinColor=ae5d29,d08b5b,edb98a`}
+                          src={`/stamps/${stamp}.png`}
                           alt={stamp}
                           className="w-10 h-10 inline-block"
                         />
