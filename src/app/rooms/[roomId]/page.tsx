@@ -254,24 +254,23 @@ export default function RoomPage() {
           <div className="mt-2 flex md:hidden">
           <div className="relative">
             <button
-              className="bg-white border border-zinc-200 w-8 h-8 aspect-square rounded-lg font-bold whitespace-nowrap flex items-center justify-center outline-none duration-200 focus-visible:ring-2 ring-offset-2"
-              onClick={() => setIsSmileDropdownOpen(!isSmileDropdownOpen)} // Toggle the dropdown visibility
+              className="bg-zinc-50 text-zinc-600 w-8 h-8 aspect-square rounded-lg flex items-center justify-center outline-none duration-200 focus-visible:ring-2 ring-offset-2"
+              onClick={() => setIsSmileDropdownOpen(!isSmileDropdownOpen)}
             >
               <FiSmile />
             </button>
                 <div className={`absolute z-10 top-10 left-0 w-64 bg-white border border-zinc-200 rounded-lg shadow-lg p-4 transition-all duration-200 ease-in-out ${ isSmileDropdownOpen ? "scale-100 opacity-100" : "scale-95 opacity-0 pointer-events-none"}`}>
-                  <h5 className="font-bold mb-2">Stamps</h5>
+                  <p className="font-bold mb-2">Stamps</p>
                   <div className="flex flex-wrap gap-2">
                     {stamps.map((stamp) => (
                       <button
                         key={stamp}
                         onClick={() => handleStampClick(stamp)}
-                        className="w-10 h-10 aspect-square hover:bg-zinc-200 duration-200 rounded-lg flex items-center justify-center"
+                        className="w-10 h-10 aspect-square outline-none focus-visible:ring-2 ring-offset-2 hover:bg-zinc-200 duration-200 rounded-lg flex items-center justify-center"
                       >
-                        <img
-                          src={`/stamps/${stamp}.png`}
+                        <img src={`/stamps/${stamp}.png`}
                           alt={stamp}
-                          className="w-10 h-10 inline-block"
+                          className="w-10"
                         />
                       </button>
                     ))}
@@ -350,7 +349,7 @@ export default function RoomPage() {
                   <p className="text-sm text-zinc-400 whitespace-nowrap">{formatRelativeTime(msg.createdAt)}</p>
                 </div>
                 <div
-                  className="whitespace-pre-wrap md h-fit flex flex-col"
+                  className="whitespace-pre-wrap md flex flex-col"
                   dangerouslySetInnerHTML={{ __html: renderMarkdown(msg.text) }}
                 />
               </div>
@@ -367,15 +366,15 @@ export default function RoomPage() {
         <textarea value={message} onChange={(e) => setMessage(e.target.value)} className="px-4 py-2 bg-zinc-50 rounded-lg w-full placeholder:text-zinc-400 outline-none duration-200 focus-visible:ring-2 ring-offset-2" placeholder="Enter a message..." rows={2}/>
         <div className="flex mt-2">
           <div className="relative">
-            <button className="bg-white border border-zinc-200 w-8 h-8 aspect-square rounded-lg font-bold whitespace-nowrap flex items-center justify-center outline-none duration-200 focus-visible:ring-2 ring-offset-2" onClick={() => setIsSmileDropdownOpen(!isSmileDropdownOpen)}>
+            <button className="bg-zinc-50 text-zinc-600 w-8 h-8 aspect-square rounded-lg flex items-center justify-center outline-none duration-200 focus-visible:ring-2 ring-offset-2" onClick={() => setIsSmileDropdownOpen(!isSmileDropdownOpen)}>
               <FiSmile />
             </button>
             <div className={`absolute z-10 bottom-10 left-0 w-64 bg-white border border-zinc-200 rounded-lg shadow-lg p-4 transition-all duration-200 ease-in-out ${ isSmileDropdownOpen ? "scale-100 opacity-100" : "scale-95 opacity-0 pointer-events-none"}`}>
               <p className="font-bold mb-2">Stamps</p>
               <div className="flex flex-wrap gap-2">
                 {stamps.map((stamp) => (
-                  <button key={stamp} onClick={() => handleStampClick(stamp)} className="w-10 h-10 rounded-lg overflow-hidden aspect-square hover:bg-zinc-200 duration-200 flex items-center justify-center">
-                    <img src={`/stamps/${stamp}.png`} alt={stamp} className="w-8"/>
+                  <button key={stamp} onClick={() => handleStampClick(stamp)} className="outline-none duration-200 focus-visible:ring-2 ring-offset-2 w-10 h-10 rounded-lg overflow-hidden aspect-square hover:bg-zinc-200 flex items-center justify-center">
+                    <img src={`/stamps/${stamp}.png`} alt={stamp} className="w-10"/>
                   </button>
                 ))}
               </div>
@@ -386,6 +385,7 @@ export default function RoomPage() {
           </button>
         </div>
       </div>
+
       <VoteModal  isOpen={isVoteModalOpen}  closeModal={closeVoteModal}  voteQuestion={voteQuestion}  setVoteQuestion={setVoteQuestion}  voteOptions={voteOptions}  setVoteOptions={setVoteOptions}  createVote={createVote} />
       <PoopModal isOpen={poopModalOpen} close={() => setPoopModalOpen(false)} />
     </div>
