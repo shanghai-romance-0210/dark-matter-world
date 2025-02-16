@@ -293,7 +293,7 @@ export default function RoomPage() {
                       >
                         <img src={`/stamps/${stamp}.png`}
                           alt={stamp}
-                          className="w-10"
+                          className="w-8"
                         />
                       </button>
                     ))}
@@ -397,7 +397,7 @@ export default function RoomPage() {
               <div className="flex flex-wrap gap-2">
                 {stamps.map((stamp) => (
                   <button key={stamp} onClick={() => handleStampClick(stamp)} className="outline-none duration-200 focus-visible:ring-2 ring-offset-2 w-10 h-10 rounded-lg overflow-hidden aspect-square hover:bg-zinc-200 flex items-center justify-center">
-                    <img src={`/stamps/${stamp}.png`} alt={stamp} className="w-10"/>
+                    <img src={`/stamps/${stamp}.png`} alt={stamp} className="w-8"/>
                   </button>
                 ))}
               </div>
