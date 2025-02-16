@@ -1,5 +1,5 @@
 "use client"
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { db } from "@/lib/firebaseConfig";
 import { collection, addDoc, query, orderBy, onSnapshot, Timestamp, doc, deleteDoc, getDocs, getDoc, updateDoc } from "firebase/firestore";
 import { usePathname } from "next/navigation"; 
@@ -44,6 +44,35 @@ export default function RoomPage() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isSmileDropdownOpen, setIsSmileDropdownOpen] = useState(false);
 
+  const dropdownRef = useRef<HTMLDivElement>(null);
+  const smileDropdownRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        dropdownRef.current &&
+        !dropdownRef.current.contains(event.target as Node) &&
+        isDropdownOpen
+      ) {
+        setIsDropdownOpen(false);
+      }
+  
+      if (
+        smileDropdownRef.current &&
+        !smileDropdownRef.current.contains(event.target as Node) &&
+        isSmileDropdownOpen
+      ) {
+        setIsSmileDropdownOpen(false);
+      }
+    };
+  
+    document.addEventListener("mousedown", handleClickOutside);
+  
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [isDropdownOpen, isSmileDropdownOpen]);
+
   useEffect(() => {
     if (!roomId) return;
     const votesQuery = query(
@@ -60,9 +89,7 @@ export default function RoomPage() {
   }, [roomId]);
   
   
-  // 投票の選択肢を選ぶ処理
   const handleVote = async (voteId: string, optionIndex: number) => {
-    // roomIdがundefinedでないことをチェック
     if (!roomId) {
       console.error("roomId is undefined");
       return;
@@ -73,17 +100,16 @@ export default function RoomPage() {
   
     if (voteSnapshot.exists()) {
       const updatedVotes = voteSnapshot.data().votes;
-      updatedVotes[optionIndex] += 1;  // 選択肢の投票数を1増やす
+      updatedVotes[optionIndex] += 1;
   
       await updateDoc(voteRef, { votes: updatedVotes });
     }
   };  
-  // ユーザー名の設定
+
   const handleUsernameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setUsername(e.target.value);
   };
 
-  // メッセージ取得（リアルタイム）
   useEffect(() => {
     const fetchMessages = () => {
       if (!roomId) return;
@@ -155,11 +181,9 @@ export default function RoomPage() {
     return formatDistanceToNow(date, { addSuffix: true });
   };
 
-  // ルームを削除する処理
   const deleteRoom = async () => {
     if (!roomId) return;
     try {
-      // まず、ルーム内のメッセージを削除
       const messagesRef = collection(db, "rooms", roomId, "messages");
       const messageSnapshot = await getDocs(messagesRef);
       messageSnapshot.forEach(async (doc) => {
@@ -182,7 +206,6 @@ export default function RoomPage() {
     if (!voteQuestion || voteOptions.some((opt) => opt === "") || !roomId) return;  // Check if roomId is defined
   
     try {
-      // Ensure roomId is a valid string and prevent undefined
       await addDoc(collection(db, "rooms", roomId, "votes"), {
         question: voteQuestion,
         options: voteOptions,
@@ -218,7 +241,7 @@ export default function RoomPage() {
     }; 
 
     const handleStampClick = (stamp: string) => {
-      setMessage(`:stamp_${stamp}`); // 直接messageにスタンプをセット
+      setMessage(`:stamp_${stamp}`);
     };    
 
   return (
@@ -236,7 +259,7 @@ export default function RoomPage() {
             >
               <FiMoreHorizontal />
             </button>
-              <div className={`absolute right-0 mt-2 w-64 p-2 bg-white border border-zinc-200 roboto rounded-lg shadow-lg overflow-hidden transition-all duration-200 ease-in-out ${ isDropdownOpen ? "scale-100 opacity-100" : "scale-95 opacity-0 pointer-events-none"}`}>
+              <div ref={dropdownRef} className={`absolute right-0 mt-2 w-64 p-2 bg-white border border-zinc-200 roboto rounded-lg shadow-lg overflow-hidden transition-all duration-200 ease-in-out ${ isDropdownOpen ? "scale-100 opacity-100" : "scale-95 opacity-0 pointer-events-none"}`}>
                 <button onClick={openVoteModal} className="w-full px-4 py-2 text-left hover:bg-zinc-50 duration-200 rounded-lg flex items-center">
                 <FiPlus className="mr-2 text-zinc-400" />Create a new vote
                 </button>
@@ -259,7 +282,7 @@ export default function RoomPage() {
             >
               <FiSmile />
             </button>
-                <div className={`absolute z-10 top-10 left-0 w-64 bg-white border border-zinc-200 rounded-lg shadow-lg p-4 transition-all duration-200 ease-in-out ${ isSmileDropdownOpen ? "scale-100 opacity-100" : "scale-95 opacity-0 pointer-events-none"}`}>
+                <div ref={smileDropdownRef} className={`absolute z-10 top-10 left-0 w-64 bg-white border border-zinc-200 rounded-lg shadow-lg p-4 transition-all duration-200 ease-in-out ${ isSmileDropdownOpen ? "scale-100 opacity-100" : "scale-95 opacity-0 pointer-events-none"}`}>
                   <p className="font-bold mb-2">Stamps</p>
                   <div className="flex flex-wrap gap-2">
                     {stamps.map((stamp) => (
@@ -369,8 +392,8 @@ export default function RoomPage() {
             <button className="bg-zinc-50 text-zinc-600 w-8 h-8 aspect-square rounded-lg flex items-center justify-center outline-none duration-200 focus-visible:ring-2 ring-offset-2" onClick={() => setIsSmileDropdownOpen(!isSmileDropdownOpen)}>
               <FiSmile />
             </button>
-            <div className={`absolute z-10 bottom-10 left-0 w-64 bg-white border border-zinc-200 rounded-lg shadow-lg p-4 transition-all duration-200 ease-in-out ${ isSmileDropdownOpen ? "scale-100 opacity-100" : "scale-95 opacity-0 pointer-events-none"}`}>
-              <p className="font-bold mb-2">Stamps</p>
+            <div ref={smileDropdownRef} className={`absolute z-10 bottom-10 left-0 w-64 bg-white border border-zinc-200 rounded-lg shadow-lg p-4 transition-all duration-200 ease-in-out ${ isSmileDropdownOpen ? "scale-100 opacity-100" : "scale-95 opacity-0 pointer-events-none"}`}>
+              <p className="mb-4">Stamps</p>
               <div className="flex flex-wrap gap-2">
                 {stamps.map((stamp) => (
                   <button key={stamp} onClick={() => handleStampClick(stamp)} className="outline-none duration-200 focus-visible:ring-2 ring-offset-2 w-10 h-10 rounded-lg overflow-hidden aspect-square hover:bg-zinc-200 flex items-center justify-center">
