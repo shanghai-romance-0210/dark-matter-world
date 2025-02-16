@@ -99,7 +99,7 @@ export default function Home() {
               <div key={index} className="p-4 rounded-lg bg-zinc-50 shadow-sm flex items-center">
                 <div className="mr-4">
                   <p className="font-bold line-clamp-2">{room.name}</p>
-                  <p className="text-sm text-zinc-400 mt-0.5 roboto">{room.id}</p>
+                  <p className="text-sm text-zinc-400 mt-0.5">#{room.id}</p>
                 </div>
                 <div className="ml-auto flex">
                   <Link href={`/rooms/${room.id}`} className="rounded-full outline-none duration-200 focus-visible:ring-2 ring-offset-2">

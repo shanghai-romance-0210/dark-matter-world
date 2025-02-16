@@ -6,7 +6,7 @@ import { usePathname } from "next/navigation";
 import { FaPaperPlane } from "react-icons/fa";
 import { formatDistanceToNow } from "date-fns"; 
 import Link from "next/link";
-import { FiChevronDown, FiChevronLeft, FiChevronUp, FiList, FiMoreHorizontal, FiPlus, FiTrash } from "react-icons/fi";
+import { FiChevronDown, FiChevronLeft, FiChevronUp, FiMoreHorizontal, FiPlus, FiSmile, FiTrash } from "react-icons/fi";
 import Avatar from "@/components/Avatar";
 import Image from "next/image";
 import { marked } from "marked";
@@ -25,6 +25,8 @@ interface Vote {
   votes: number[];
 }
 
+const stamps = ["D","E", "A", "N", "R", "I",];
+
 export default function RoomPage() {
   const [message, setMessage] = useState("");
   const [messages, setMessages] = useState<Message[]>([]);
@@ -38,8 +40,8 @@ export default function RoomPage() {
   const [voteOptions, setVoteOptions] = useState<string[]>(["", ""]);
   const [votes, setVotes] = useState<Vote[]>([]);
   const [poopModalOpen, setPoopModalOpen] = useState(false);
-  const [isEventModalOpen, setIsEventModalOpen] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isSmileDropdownOpen, setIsSmileDropdownOpen] = useState(false);
 
   useEffect(() => {
     if (!roomId) return;
@@ -174,8 +176,6 @@ export default function RoomPage() {
 
   const openVoteModal = () => setIsVoteModalOpen(true);
   const closeVoteModal = () => setIsVoteModalOpen(false);
-  const openEventModal = () => setIsEventModalOpen(true);
-  const closeEventModal = () => setIsEventModalOpen(false);
 
   const handleVoteQuestionChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setVoteQuestion(e.target.value);
@@ -218,10 +218,18 @@ export default function RoomPage() {
     }
   };
 
-  const renderMarkdown = (text: string) => {
-    // `marked`を使ってマークダウンをHTMLに変換
-    return marked(text);
-  };  
+// renderMarkdownにスタンプの処理を追加
+    const renderMarkdown = (text: string) => {
+      const stampRegex = /:stamp_([a-zA-Z0-9_]+)/g;
+      const replacedText = text.replace(stampRegex, (match, stamp) => {
+        return `<div class="w-1/4"><img src="https://api.dicebear.com/9.x/open-peeps/svg?seed=${stamp}&accessories[]&clothingColor=e78276&face=cyclops,monster&facialHair[]&head=bear&headContrastColor[]&mask[]&skinColor=ae5d29,d08b5b,edb98a" alt="stamp" class="w-full" /></div>`;
+      });
+      return marked(replacedText);
+    }; 
+
+    const handleStampClick = (stamp: string) => {
+      setMessage(`:stamp_${stamp}`); // 直接messageにスタンプをセット
+    };    
 
   return (
     <div className="md:max-w-md w-full md:mx-auto p-4 md:py-8">
@@ -239,9 +247,6 @@ export default function RoomPage() {
               <FiMoreHorizontal />
             </button>
               <div className={`absolute right-0 mt-2 w-64 p-2 bg-white border border-zinc-200 roboto rounded-lg shadow-lg overflow-hidden transition-all duration-200 ease-in-out ${ isDropdownOpen ? "scale-100 opacity-100" : "scale-95 opacity-0 pointer-events-none"}`}>
-                <button onClick={openEventModal} className="w-full px-4 py-2 text-left hover:bg-zinc-50 duration-200 rounded-lg flex items-center">
-                <FiList className="mr-2 text-zinc-400" />Text Event List
-                </button>
                 <button onClick={openVoteModal} className="w-full px-4 py-2 text-left hover:bg-zinc-50 duration-200 rounded-lg flex items-center">
                 <FiPlus className="mr-2 text-zinc-400" />Create a new vote
                 </button>
@@ -321,31 +326,17 @@ export default function RoomPage() {
         <h2 className="text-xl font-bold">Chat</h2>
         {messages.length > 0 ? (
           messages.map((msg, index) => {
-            const isStamp = msg.text.trim().startsWith("stamp") && !msg.text.trim().includes(" ") && !msg.text.trim().includes("　");
-
             return (
-              <div key={index} className="p-4 bg-zinc-50 rounded-lg flex flex-col shadow-sm">
+              <div key={index} className="p-4 bg-white rounded-lg flex flex-col bg-zinc-50">
                 <div className="flex items-center mb-2">
                   <Avatar name={msg.username} />
                   <p className="text-sm font-bold mx-2 line-clamp-1">{msg.username}</p>
-                  <p className="text-sm text-zinc-400 whitespace-nowrap roboto">{formatRelativeTime(msg.createdAt)}</p>
+                  <p className="text-sm text-zinc-400 whitespace-nowrap">{formatRelativeTime(msg.createdAt)}</p>
                 </div>
-                {isStamp ? (
-                  <div className="w-full flex items-center justify-center">
-                    <Image
-                      src={`/stamps/${msg.text}.png`}
-                      alt={msg.text}
-                      width={100}
-                      className="w-32"
-                      height={100}
-                    />
-                  </div>
-                ) : (
                 <div
                   className="whitespace-pre-wrap md h-fit flex flex-col"
                   dangerouslySetInnerHTML={{ __html: renderMarkdown(msg.text) }}
                 />
-                  )}
               </div>
             );
           })
@@ -365,6 +356,32 @@ export default function RoomPage() {
           rows={2}
         />
         <div className="flex mt-2">
+        <div className="relative">
+            <button
+              className="bg-white border border-zinc-200 w-8 h-8 aspect-square rounded-lg font-bold whitespace-nowrap flex items-center justify-center outline-none duration-200 focus-visible:ring-2 ring-offset-2"
+              onClick={() => setIsSmileDropdownOpen(!isSmileDropdownOpen)} // Toggle the dropdown visibility
+            >
+              <FiSmile />
+            </button>
+                <div className={`absolute z-10 bottom-12 left-0 w-64 bg-white border border-zinc-200 rounded-lg shadow-lg p-4 transition-all duration-200 ease-in-out ${ isSmileDropdownOpen ? "scale-100 opacity-100" : "scale-95 opacity-0 pointer-events-none"}`}>
+                  <h5 className="font-bold mb-2">Stamps</h5>
+                  <div className="flex flex-wrap gap-2">
+                    {stamps.map((stamp) => (
+                      <button
+                        key={stamp}
+                        onClick={() => handleStampClick(stamp)}
+                        className="w-10 h-10 aspect-square hover:bg-zinc-200 duration-200 rounded-lg flex items-center justify-center"
+                      >
+                        <img
+                          src={`https://api.dicebear.com/9.x/open-peeps/svg?seed=${stamp}&accessories[]&clothingColor=e78276&face=cyclops,monster&facialHair[]&head=bear&headContrastColor[]&mask[]&skinColor=ae5d29,d08b5b,edb98a`}
+                          alt={stamp}
+                          className="w-10 h-10 inline-block"
+                        />
+                      </button>
+                    ))}
+                  </div>
+                </div>
+          </div>
           <button onClick={sendMessage} className="ml-auto bg-zinc-800 text-white w-8 h-8 aspect-square rounded-lg font-bold whitespace-nowrap flex items-center justify-center outline-none duration-200 focus-visible:ring-2 ring-offset-2">
             <FaPaperPlane />
           </button>
@@ -409,39 +426,6 @@ export default function RoomPage() {
                 className="bg-zinc-800 text-white px-4 py-2 rounded-lg outline-none duration-200 focus-visible:ring-2 ring-offset-2"
               >
                 Create Vote
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
-        {isEventModalOpen && (
-        <div className="z-50 fixed inset-0 flex justify-center items-center bg-zinc-400 bg-opacity-50 backdrop-blur">
-          <div className="bg-white p-6 rounded-lg w-3/4 md:w-1/4">
-            <h2 className="text-lg font-bold mb-4">Text Event List</h2>
-            <div className="flex flex-col space-y-4 mb-4 max-h-32 overflow-y-auto">
-              <div className="flex items-center border p-2 border-zinc-200 rounded-lg">
-                <Image src="/poop.png" alt="Stamp" width={100} height={100} className="w-8" />
-                <p className="ml-2">poop</p>
-              </div>
-              <div className="flex items-center border p-2 border-zinc-200 rounded-lg">
-                <Image src="/stamps/stamp1.png" alt="Stamp" width={100} height={100} className="w-8" />
-                <p className="ml-2">stamp1</p>
-              </div>
-              <div className="flex items-center border p-2 border-zinc-200 rounded-lg">
-                <Image src="/stamps/stamp2.png" alt="Stamp" width={100} height={100} className="w-8" />
-                <p className="ml-2">stamp2</p>
-              </div>
-              <div className="flex items-center border p-2 border-zinc-200 rounded-lg">
-                <Image src="/stamps/stamp3.png" alt="Stamp" width={100} height={100} className="w-8" />
-                <p className="ml-2">stamp3</p>
-              </div>
-            </div>  
-            <div className="flex justify-end">
-              <button
-                onClick={closeEventModal}
-                className="bg-zinc-800 text-white px-4 py-2 rounded-lg outline-none duration-200 focus-visible:ring-2 ring-offset-2"
-              >
-                OK
               </button>
             </div>
           </div>
