@@ -262,6 +262,32 @@ export default function RoomPage() {
           <input type="text" value={username} onChange={handleUsernameChange} className="px-4 py-2 bg-zinc-50 rounded-lg w-full placeholder:text-zinc-400 outline-none duration-200 focus-visible:ring-2 ring-offset-2" placeholder="Your Name" />
           <textarea value={message} onChange={(e) => setMessage(e.target.value)} className="md:hidden mt-2 px-4 py-2 bg-zinc-50 rounded-lg w-full placeholder:text-zinc-400 outline-none duration-200 focus-visible:ring-2 ring-offset-2" placeholder="Enter a message..." rows={2}/>
           <div className="mt-2 flex md:hidden">
+          <div className="relative">
+            <button
+              className="bg-white border border-zinc-200 w-8 h-8 aspect-square rounded-lg font-bold whitespace-nowrap flex items-center justify-center outline-none duration-200 focus-visible:ring-2 ring-offset-2"
+              onClick={() => setIsSmileDropdownOpen(!isSmileDropdownOpen)} // Toggle the dropdown visibility
+            >
+              <FiSmile />
+            </button>
+                <div className={`absolute z-10 top-10 left-0 w-64 bg-white border border-zinc-200 rounded-lg shadow-lg p-4 transition-all duration-200 ease-in-out ${ isSmileDropdownOpen ? "scale-100 opacity-100" : "scale-95 opacity-0 pointer-events-none"}`}>
+                  <h5 className="font-bold mb-2">Stamps</h5>
+                  <div className="flex flex-wrap gap-2">
+                    {stamps.map((stamp) => (
+                      <button
+                        key={stamp}
+                        onClick={() => handleStampClick(stamp)}
+                        className="w-10 h-10 aspect-square hover:bg-zinc-200 duration-200 rounded-lg flex items-center justify-center"
+                      >
+                        <img
+                          src={`https://api.dicebear.com/9.x/open-peeps/svg?seed=${stamp}&accessories[]&clothingColor=e78276&face=cyclops,monster&facialHair[]&head=bear&headContrastColor[]&mask[]&skinColor=ae5d29,d08b5b,edb98a`}
+                          alt={stamp}
+                          className="w-10 h-10 inline-block"
+                        />
+                      </button>
+                    ))}
+                  </div>
+                </div>
+          </div>
             <button onClick={sendMessage} className="bg-zinc-800 text-white w-8 h-8 aspect-square rounded-lg flex items-center justify-center ml-auto">
               <FaPaperPlane />
             </button>
