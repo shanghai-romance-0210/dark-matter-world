@@ -8,8 +8,9 @@ import { formatDistanceToNow } from "date-fns";
 import Link from "next/link";
 import { FiChevronDown, FiChevronLeft, FiChevronUp, FiMoreHorizontal, FiPlus, FiSmile, FiTrash } from "react-icons/fi";
 import Avatar from "@/components/Avatar";
-import Image from "next/image";
 import { marked } from "marked";
+import VoteModal from "@/components/VoteModal";
+import PoopModal from "@/components/PoopModal";
 
 interface Message {
   text: string;
@@ -177,16 +178,6 @@ export default function RoomPage() {
   const openVoteModal = () => setIsVoteModalOpen(true);
   const closeVoteModal = () => setIsVoteModalOpen(false);
 
-  const handleVoteQuestionChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setVoteQuestion(e.target.value);
-  };
-
-  const handleVoteOptionChange = (e: React.ChangeEvent<HTMLInputElement>, index: number) => {
-    const newOptions = [...voteOptions];
-    newOptions[index] = e.target.value;
-    setVoteOptions(newOptions);
-  };
-
   const createVote = async () => {
     if (!voteQuestion || voteOptions.some((opt) => opt === "") || !roomId) return;  // Check if roomId is defined
   
@@ -218,7 +209,6 @@ export default function RoomPage() {
     }
   };
 
-// renderMarkdownにスタンプの処理を追加
     const renderMarkdown = (text: string) => {
       const stampRegex = /:stamp_([a-zA-Z0-9_]+)/g;
       const replacedText = text.replace(stampRegex, (match, stamp) => {
@@ -233,7 +223,7 @@ export default function RoomPage() {
 
   return (
     <div className="md:max-w-md w-full md:mx-auto p-4 md:py-8">
-      <div className="p-4 rounded-lg border border-zinc-200 shadow-sm">
+      <div className="p-4 rounded-lg border border-zinc-200">
         <div className="flex items-center">
           <Link href="/" className="duration-200 flex outline-none duration-200 focus-visible:ring-2 ring-offset-2">
             <FiChevronLeft />
@@ -413,57 +403,19 @@ export default function RoomPage() {
           </button>
         </div>
       </div>
-      {isVoteModalOpen && (
-        <div className="z-50 fixed inset-0 flex justify-center items-center bg-zinc-400 bg-opacity-50 backdrop-blur">
-          <div className="bg-white p-6 rounded-lg w-3/4 md:w-1/4">
-            <h2 className="text-lg font-bold mb-4">Create a New Vote</h2>
-            <input
-              type="text"
-              value={voteQuestion}
-              onChange={handleVoteQuestionChange}
-              placeholder="Enter your question"
-              className="placeholder:text-zinc-400 mb-4 w-full px-4 py-2 border border-zinc-200 rounded-lg outline-none duration-200 focus-visible:ring-2 ring-offset-2"
-            />
-            {voteOptions.map((option, index) => (
-              <input
-                key={index}
-                type="text"
-                value={option}
-                onChange={(e) => handleVoteOptionChange(e, index)}
-                placeholder={`Option ${index + 1}`}
-                className="placeholder:text-zinc-400 mb-2 w-full px-4 py-2 border border-zinc-200 rounded-lg outline-none duration-200 focus-visible:ring-2 ring-offset-2"
-              />
-            ))}
-            <button
-              onClick={() => setVoteOptions([...voteOptions, ""])}
-              className="text-zinc-600 mb-4 text-sm p-0 outline-none"
-            >
-              Add another option
-            </button>
-            <div className="flex justify-end">
-              <button
-                onClick={closeVoteModal}
-                className="text-zinc-600 px-4 py-2 rounded-lg outline-none duration-200 focus-visible:ring-2 ring-offset-2"
-              >
-                Cancel
-              </button>
-              <button
-                onClick={createVote}
-                className="bg-zinc-800 text-white px-4 py-2 rounded-lg outline-none duration-200 focus-visible:ring-2 ring-offset-2"
-              >
-                Create Vote
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
-      {poopModalOpen && (
-        <div className="z-50 fixed inset-0 flex justify-center items-center bg-zinc-400 bg-opacity-50 backdrop-blur">
-          <button onClick={() => setPoopModalOpen(false)} className="w-3/4 md:w-1/4 p-0">
-             <Image src="/poop.png" alt="Image" width={100} height={100} className="w-full" />
-          </button>
-        </div>
-      )}
+      <VoteModal 
+        isOpen={isVoteModalOpen} 
+        closeModal={closeVoteModal} 
+        voteQuestion={voteQuestion} 
+        setVoteQuestion={setVoteQuestion} 
+        voteOptions={voteOptions} 
+        setVoteOptions={setVoteOptions} 
+        createVote={createVote} 
+      />
+      <PoopModal
+        isOpen={poopModalOpen}
+        close={() => setPoopModalOpen(false)}
+      />
     </div>
   );
 }
