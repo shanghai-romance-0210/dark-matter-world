@@ -235,7 +235,7 @@ export default function RoomPage() {
     const renderMarkdown = (text: string) => {
       const stampRegex = /:stamp_([a-zA-Z0-9_]+)/g;
       const replacedText = text.replace(stampRegex, (match, stamp) => {
-        return `<div class="w-1/4"><img src="/stamps/${stamp}.png" alt="stamp" class="w-full" /></div>`;
+        return `<div class="max-h-16"><img src="/stamps/${stamp}.png" alt="stamp" class="h-16 " /></div>`;
       });
       return marked(replacedText);
     }; 
@@ -293,7 +293,7 @@ export default function RoomPage() {
                       >
                         <img src={`/stamps/${stamp}.png`}
                           alt={stamp}
-                          className="w-8"
+                          className="h-8"
                         />
                       </button>
                     ))}
@@ -397,7 +397,7 @@ export default function RoomPage() {
               <div className="flex flex-wrap gap-2">
                 {stamps.map((stamp) => (
                   <button key={stamp} onClick={() => handleStampClick(stamp)} className="outline-none duration-200 focus-visible:ring-2 ring-offset-2 w-10 h-10 rounded-lg overflow-hidden aspect-square hover:bg-zinc-200 flex items-center justify-center">
-                    <img src={`/stamps/${stamp}.png`} alt={stamp} className="w-8"/>
+                    <img src={`/stamps/${stamp}.png`} alt={stamp} className="h-8"/>
                   </button>
                 ))}
               </div>
