@@ -283,7 +283,7 @@ export default function RoomPage() {
               <FiSmile />
             </button>
                 <div ref={smileDropdownRef} className={`absolute z-10 top-10 left-0 w-64 bg-white border border-zinc-200 rounded-lg shadow-lg p-4 transition-all duration-200 ease-in-out ${ isSmileDropdownOpen ? "scale-100 opacity-100" : "scale-95 opacity-0 pointer-events-none"}`}>
-                  <p className="font-bold mb-2">Stamps</p>
+                  <p className="mb-4">Stamps</p>
                   <div className="flex flex-wrap gap-2">
                     {stamps.map((stamp) => (
                       <button
