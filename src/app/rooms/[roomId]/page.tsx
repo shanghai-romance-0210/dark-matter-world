@@ -394,14 +394,21 @@ export default function RoomPage() {
             </button>
             <div ref={smileDropdownRef} className={`absolute z-10 bottom-10 left-0 w-64 bg-white border border-zinc-200 rounded-lg shadow-lg p-4 transition-all duration-200 ease-in-out ${ isSmileDropdownOpen ? "scale-100 opacity-100" : "scale-95 opacity-0 pointer-events-none"}`}>
               <p className="mb-4">Stamps</p>
-              <div className="flex flex-wrap gap-2">
-                {stamps.map((stamp) => (
-                  <button key={stamp} onClick={() => handleStampClick(stamp)} className="outline-none duration-200 focus-visible:ring-2 ring-offset-2 w-10 h-10 rounded-lg overflow-hidden aspect-square hover:bg-zinc-200 flex items-center justify-center">
-                    <img src={`/stamps/${stamp}.png`} alt={stamp} className="h-8"/>
-                  </button>
-                ))}
-              </div>
-            </div>
+                <div className="flex flex-wrap gap-2">
+                    {stamps.map((stamp) => (
+                      <button
+                        key={stamp}
+                        onClick={() => handleStampClick(stamp)}
+                        className="w-10 h-10 aspect-square outline-none focus-visible:ring-2 ring-offset-2 hover:bg-zinc-200 duration-200 rounded-lg flex items-center justify-center"
+                      >
+                        <img src={`/stamps/${stamp}.png`}
+                          alt={stamp}
+                          className="h-8"
+                        />
+                      </button>
+                    ))}
+                  </div>
+                </div>
           </div>
           <button onClick={sendMessage} className="ml-auto bg-zinc-800 text-white w-8 h-8 aspect-square rounded-lg font-bold whitespace-nowrap flex items-center justify-center outline-none duration-200 focus-visible:ring-2 ring-offset-2">
             <FaPaperPlane />
