@@ -362,7 +362,7 @@ export default function RoomPage() {
                   <p className="text-sm text-zinc-400 whitespace-nowrap">{formatRelativeTime(msg.createdAt)}</p>
                 </div>
                 <div
-                  className="md flex flex-col"
+                  className="md flex flex-col whitespace-pre-wrap"
                   dangerouslySetInnerHTML={{ __html: marked(formattedText) }}
                 />
               </div>
