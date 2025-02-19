@@ -314,10 +314,9 @@ export default function RoomPage() {
 
       {votes.length > 0 && (
         <div className="mt-8">
-          <h2 className="text-xl font-bold mb-4">Votes</h2>
           <div className="space-y-4">
             {votes.map((vote) => (
-              <div key={vote.id} className="p-4 shadow-sm rounded-lg border border-zinc-200 rounded-lg p-4 shadow-sm bg-white">
+              <div key={vote.id} className="p-4 rounded-lg border border-zinc-200 bg-white">
                 <div className="flex items-center mb-4">
                   <h3 className="font-bold mr-2">{vote.question}</h3>
                   <button
@@ -372,7 +371,7 @@ export default function RoomPage() {
                   <p className="text-sm text-zinc-400 whitespace-nowrap">{formatRelativeTime(msg.createdAt)}</p>
                 </div>
                 <div
-                  className="whitespace-pre-wrap md flex flex-col"
+                  className="md flex flex-col"
                   dangerouslySetInnerHTML={{ __html: renderMarkdown(msg.text) }}
                 />
               </div>
