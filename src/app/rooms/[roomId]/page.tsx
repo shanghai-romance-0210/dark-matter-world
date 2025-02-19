@@ -232,17 +232,9 @@ export default function RoomPage() {
     }
   };
 
-    const renderMarkdown = (text: string) => {
-      const stampRegex = /:stamp_([a-zA-Z0-9_]+)/g;
-      const replacedText = text.replace(stampRegex, (match, stamp) => {
-        return `<div class="max-h-16"><img src="/stamps/${stamp}.png" alt="stamp" class="h-16 " /></div>`;
-      });
-      return marked(replacedText);
-    }; 
-
-    const handleStampClick = (stamp: string) => {
-      setMessage(`:stamp_${stamp}`);
-    };    
+  const handleStampClick = (stamp: string) => {
+    setMessage(`:stamp_${stamp}`);
+  };
 
   return (
     <div className="md:max-w-md w-full md:mx-auto p-4 md:py-8">
@@ -363,6 +355,10 @@ export default function RoomPage() {
         <h2 className="text-xl font-bold">Chat</h2>
         {messages.length > 0 ? (
           messages.map((msg, index) => {
+            const formattedText = msg.text.replace(/:stamp_([a-zA-Z0-9_]+)/g, (match, stamp) => {
+              return `<div class="max-h-16"><img src="/stamps/${stamp}.png" alt="stamp" class="h-16" /></div>`;
+            });
+
             return (
               <div key={index} className="p-4 bg-white rounded-lg flex flex-col bg-zinc-50">
                 <div className="flex items-center mb-2">
@@ -372,7 +368,7 @@ export default function RoomPage() {
                 </div>
                 <div
                   className="md flex flex-col"
-                  dangerouslySetInnerHTML={{ __html: renderMarkdown(msg.text) }}
+                  dangerouslySetInnerHTML={{ __html: marked(formattedText) }}
                 />
               </div>
             );
