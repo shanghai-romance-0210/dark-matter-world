@@ -45,7 +45,7 @@ export default function RoomPage() {
   const [isSmileDropdownOpen, setIsSmileDropdownOpen] = useState(false);
 
   const dropdownRef = useRef<HTMLDivElement>(null);
-  const smileDropdownRef = useRef<HTMLDivElement>(null);
+  const smileDropdownRef = useRef<HTMLDivElement>(null); 
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -143,7 +143,6 @@ export default function RoomPage() {
         const roomRef = doc(db, "rooms", roomId);
         const roomSnapshot = await getDoc(roomRef);
         if (roomSnapshot.exists()) {
-          // Set the room name to the state
           setRoomName(roomSnapshot.data().name);
         }
       } catch (error) {
@@ -192,15 +191,11 @@ export default function RoomPage() {
 
       await deleteDoc(doc(db, "rooms", roomId));
       console.log("Room deleted successfully");
-      // ルーム削除後、ページ遷移
       window.location.href = "/";
     } catch (error) {
       console.error("Error deleting room: ", error);
     }
   };
-
-  const openVoteModal = () => setIsVoteModalOpen(true);
-  const closeVoteModal = () => setIsVoteModalOpen(false);
 
   const createVote = async () => {
     if (!voteQuestion || voteOptions.some((opt) => opt === "") || !roomId) return;  // Check if roomId is defined
@@ -215,7 +210,7 @@ export default function RoomPage() {
   
       setVoteQuestion("");
       setVoteOptions(["", ""]);
-      closeVoteModal();
+      setIsVoteModalOpen(false);
     } catch (error) {
       console.error("Error creating vote: ", error);
     }
@@ -252,7 +247,7 @@ export default function RoomPage() {
               <FiMoreHorizontal />
             </button>
               <div ref={dropdownRef} className={`absolute right-0 mt-2 w-64 p-2 bg-white border border-zinc-200 roboto rounded-lg shadow-lg overflow-hidden transition-all duration-200 ease-in-out ${ isDropdownOpen ? "scale-100 opacity-100" : "scale-95 opacity-0 pointer-events-none"}`}>
-                <button onClick={openVoteModal} className="w-full px-4 py-2 text-left hover:bg-zinc-50 duration-200 rounded-lg flex items-center">
+                <button onClick={() => setIsVoteModalOpen(true)} className="w-full px-4 py-2 text-left hover:bg-zinc-50 duration-200 rounded-lg flex items-center">
                 <FiPlus className="mr-2 text-zinc-400" />Create a new vote
                 </button>
                 <div className="my-2 border-t border-zinc-200" />
@@ -410,8 +405,8 @@ export default function RoomPage() {
           </button>
         </div>
       </div>
-
-      <VoteModal  isOpen={isVoteModalOpen}  closeModal={closeVoteModal}  voteQuestion={voteQuestion}  setVoteQuestion={setVoteQuestion}  voteOptions={voteOptions}  setVoteOptions={setVoteOptions}  createVote={createVote} />
+      
+      <VoteModal  isOpen={isVoteModalOpen}  closeModal={() => setIsVoteModalOpen(false)}  voteQuestion={voteQuestion}  setVoteQuestion={setVoteQuestion}  voteOptions={voteOptions}  setVoteOptions={setVoteOptions}  createVote={createVote} />
       <PoopModal isOpen={poopModalOpen} close={() => setPoopModalOpen(false)} />
     </div>
   );
