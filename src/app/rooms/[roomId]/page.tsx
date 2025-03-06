@@ -5,7 +5,7 @@ import { collection, addDoc, query, orderBy, onSnapshot, Timestamp, doc, deleteD
 import { usePathname } from "next/navigation"; 
 import { formatDistanceToNow } from "date-fns"; 
 import Link from "next/link";
-import { FiMoreHorizontal, FiPlus, FiTrash } from "react-icons/fi";
+import { FiPlus, FiTrash } from "react-icons/fi";
 import Avatar from "@/components/Avatar";
 import { marked } from "marked";
 import VoteModal from "@/components/VoteModal";
@@ -256,65 +256,32 @@ export default function RoomPage() {
       <div className="px-8 py-4 flex items-center justify-center select-none h-16 bg-white sticky top-0 z-50">
         <Link href="/" className="flex items-center"><Image src="/logo.svg" alt="Logo" width={100} height={100} className="h-8 w-fit mr-2" /><p className="text-xl">{roomName || "Loading..."}</p></Link>
         <div className="relative z-10 ml-2">
-          <button className="w-8 h-8 rounded-full border border-zinc-200 flex items-center justify-center duration-200 bg-white outline-none focus-visible:ring-2 ring-offset-2" onClick={() => setIsDropdownOpen(!isDropdownOpen)}>
-            <FiMoreHorizontal />
+          <button className="text-sm px-4 py-2 rounded-full border border-zinc-200 bg-white" onClick={() => setIsDropdownOpen(!isDropdownOpen)}>
+            設定
           </button>
               <div ref={dropdownRef} className={`absolute border border-zinc-200 right-0 mt-2 w-64 p-2 bg-white roboto rounded-lg shadow-lg overflow-hidden transition-all duration-200 ease-in-out ${ isDropdownOpen ? "scale-100 opacity-100" : "scale-95 opacity-0 pointer-events-none"}`}>
-                <button onClick={() => setIsVoteModalOpen(true)} className="w-full px-4 py-2 text-left hover:bg-zinc-50 duration-200 rounded-lg flex items-center">
+                <button onClick={() => setIsVoteModalOpen(true)} className="w-full px-4 py-2 text-left hover:bg-zinc-200 duration-200 rounded-lg flex items-center">
                 <FiPlus className="mr-2 text-zinc-400" />投票を作成する
                 </button>
                 <button onClick={deleteRoom} className="w-full text-red-600 px-4 py-2 text-left hover:bg-red-50 duration-200 rounded-lg flex items-center">
-                  <FiTrash className="mr-2 text-red-400" />コミュニティを削除
+                  <FiTrash className="mr-2 text-red-400" />コミュニティを削除する
                 </button>
               </div>
           </div>
       </div>
       
       <div className="md:max-w-md w-full mx-auto p-4 md:py-8">
-        <div className="flex flex-col bg-white p-4 rounded-lg space-y-2">
-          <input type="text" value={username} onChange={handleUsernameChange} className="text-sm px-4 py-2 w-full placeholder:text-zinc-400 flex items-center rounded-lg outline-none bg-zinc-50" placeholder="表示名" />
-          <textarea value={message} onChange={(e) => setMessage(e.target.value)} className="resize-none bg-zinc-50 mt-2 px-4 py-2 rounded-lg w-full placeholder:text-zinc-400 outline-none" placeholder="メッセージを入力してください" rows={2}/>
-          <div className="flex mt-2">
-            <div className="relative">
-              <button className="bg-blue-50 text-blue-600 text-sm px-4 py-2 rounded-full" onClick={() => setIsSmileDropdownOpen(!isSmileDropdownOpen)}>
-                スタンプ
-              </button>
-              <div ref={smileDropdownRef} className={`absolute z-10 top-8 left-0 w-64 bg-white border border-zinc-200 rounded-lg shadow-lg p-4 transition-all duration-200 ease-in-out ${ isSmileDropdownOpen ? "scale-100 opacity-100" : "scale-95 opacity-0 pointer-events-none"}`}>
-                <p className="mb-4">スタンプ</p>
-                  <div className="flex flex-wrap gap-2">
-                      {stamps.map((stamp) => (
-                        <button
-                          key={stamp}
-                          onClick={() => handleStampClick(stamp)}
-                          className="w-10 h-10 aspect-square outline-none focus-visible:ring-2 ring-offset-2 hover:bg-zinc-200 duration-200 rounded-lg flex items-center justify-center"
-                        >
-                          <img src={`/stamps/${stamp}.png`}
-                            alt={stamp}
-                            className="h-8"
-                          />
-                        </button>
-                      ))}
-                    </div>
-                  </div>
-            </div>
-            <button onClick={sendMessage} className="text-sm ml-auto bg-blue-600 text-white rounded-full whitespace-nowrap px-4 py-2">
-              送信
-            </button>
-          </div>
-        </div>
-
-      {votes.length > 0 && (
-        <div className="mt-8">
-          <div className="space-y-4">
+        {votes.length > 0 && (
+          <div className="space-y-4 mb-8">
             {votes.map((vote) => (
-              <div key={vote.id} className="p-4 rounded-lg border border-zinc-200 bg-white">
+              <div key={vote.id} className="p-4 rounded-lg bg-white shadow-md">
                 <div className="flex items-center mb-4">
-                  <h3 className="font-bold mr-2">{vote.question}</h3>
+                  <h3 className="text-lg font-normal">{vote.question}</h3>
                   <button
                     onClick={() => deleteVote(vote.id)}
-                    className="ml-auto text-red-600 px-2 py-0.5 text-sm bg-red-50 rounded-lg"
+                    className="ml-auto text-red-600 px-4 py-2 text-sm bg-red-50 rounded-full"
                   >
-                    Delete
+                    削除
                   </button>
                 </div>
                 <div className="space-y-4">
@@ -347,10 +314,41 @@ export default function RoomPage() {
               </div>
             ))}
           </div>
-        </div>
-      )}
+        )}
 
-      <div className="mt-8 space-y-4 flex flex-col max-h-[512px] overflow-y-auto">
+        <div className="flex flex-col bg-white p-4 rounded-lg space-y-2">
+          <input type="text" value={username} onChange={handleUsernameChange} className="px-4 py-2 w-full placeholder:text-zinc-400 flex items-center rounded-lg outline-none bg-zinc-50" placeholder="表示名" />
+          <textarea value={message} onChange={(e) => setMessage(e.target.value)} className="resize-none bg-zinc-50 mt-2 px-4 py-2 rounded-lg w-full placeholder:text-zinc-400 outline-none" placeholder="メッセージを入力してください" rows={2}/>
+          <div className="flex mt-2">
+            <div className="relative">
+              <button className="bg-blue-50 text-blue-600 text-sm px-4 py-2 rounded-full" onClick={() => setIsSmileDropdownOpen(!isSmileDropdownOpen)}>
+                スタンプ
+              </button>
+              <div ref={smileDropdownRef} className={`absolute z-10 top-8 left-0 w-64 bg-white border border-zinc-200 rounded-lg shadow-lg p-4 transition-all duration-200 ease-in-out ${ isSmileDropdownOpen ? "scale-100 opacity-100" : "scale-95 opacity-0 pointer-events-none"}`}>
+                <p className="mb-4">スタンプ</p>
+                  <div className="flex flex-wrap gap-2">
+                      {stamps.map((stamp) => (
+                        <button
+                          key={stamp}
+                          onClick={() => handleStampClick(stamp)}
+                          className="w-10 h-10 aspect-square outline-none focus-visible:ring-2 ring-offset-2 hover:bg-zinc-200 duration-200 rounded-lg flex items-center justify-center"
+                        >
+                          <img src={`/stamps/${stamp}.png`}
+                            alt={stamp}
+                            className="h-8"
+                          />
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+            </div>
+            <button onClick={sendMessage} className="text-sm ml-auto bg-blue-600 text-white rounded-full whitespace-nowrap px-4 py-2">
+              送信
+            </button>
+          </div>
+        </div>
+
+      <div className="mt-8 space-y-4 flex flex-col">
         {messages.length > 0 ? (
           messages.map((msg, index) => {
             const formattedText = msg.text.replace(/:stamp_([a-zA-Z0-9_]+)/g, (match, stamp) => {
@@ -369,14 +367,12 @@ export default function RoomPage() {
                   dangerouslySetInnerHTML={{ __html: marked(formattedText) }}
                 />
 
-                {/* それぞれの投稿にいいねする */}
-                <button
-                  onClick={() => handleLike(msg.id, msg.likes)}
-                  className="w-fit flex items-center text-sm mt-2 text-zinc-200 hover:text-red-400 duration-200"
-                >
-                  <FaHeart className="mr-0.5" />
-                  <p>{msg.likes}</p> {/* Display the current number of likes */}
-                </button>
+                <div className="mt-2 flex items-center">
+                  <button onClick={() => handleLike(msg.id, msg.likes)} className="w-fit flex items-center text-sm text-zinc-200 hover:text-red-400 duration-200">
+                    <FaHeart className="mr-0.5" />
+                    <p>{msg.likes}</p>
+                  </button>
+                </div>
               </div>
             );
           })

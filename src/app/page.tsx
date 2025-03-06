@@ -37,12 +37,12 @@ export default function Home() {
 
     const validRoomId = /^[a-zA-Z0-9_.-]+$/.test(roomId);
     if (!validRoomId) {
-      setErrorMessage("Invalid room ID. Only letters, numbers, '-', '_', and '.' are allowed.");
+      setErrorMessage("無効なルームIDです。使用できるのは、文字、数字、'-'、'_'、および '.' のみです。");
       return;
     }
 
     if (roomId.length > 10) {
-      setErrorMessage("Room ID must not exceed 10 characters.");
+      setErrorMessage("ルームIDは10文字を超えてはいけません。");
       return;
     }
 
@@ -90,7 +90,7 @@ export default function Home() {
       </div>
 
       <div className="fixed right-8 bottom-8">
-        <button className="px-4 py-2 rounded-full bg-blue-200 text-blue-600 whitespace-nowrap shadow-lg flex items-center" onClick={() => setShowModal(true)}>
+        <button className="px-4 py-2 rounded-full bg-blue-50 text-blue-600 whitespace-nowrap shadow-lg flex items-center" onClick={() => setShowModal(true)}>
           <FiPlus className="mr-2" />コミュニティを新規作成
         </button>
       </div>
@@ -99,7 +99,7 @@ export default function Home() {
       {showModal && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50 backdrop-blur">
           <div className="bg-white p-6 rounded-lg w-3/4 md:w-1/4">
-            <h1 className="text-xl mb-4">ルームを新規作成</h1>
+            <h1 className="text-xl mb-4">コミュニティを新規作成</h1>
             <input
               type="text"
               value={roomName}
@@ -120,15 +120,15 @@ export default function Home() {
             <div className="flex items-center justify-end">
               <button
                 onClick={() => setShowModal(false)}
-                className="bg-blue-200 text-blue-600 py-2 px-4 rounded-full"
+                className="bg-blue-50 text-blue-600 py-2 px-4 rounded-full"
               >
-                Close
+                キャンセル
               </button>
               <button
                 onClick={createRoom}
                 className="bg-blue-600 text-white py-2 px-4 rounded-full ml-2"
               >
-                Create
+                作成
               </button>
             </div>
           </div>
