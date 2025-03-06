@@ -11,11 +11,14 @@ import { marked } from "marked";
 import VoteModal from "@/components/VoteModal";
 import PoopModal from "@/components/PoopModal";
 import Image from "next/image";
+import { FaHeart } from "react-icons/fa";
 
 interface Message {
+  id: string;
   text: string;
   createdAt: Timestamp;
   username: string;
+  likes: number;
 }
 
 interface Vote {
@@ -121,9 +124,11 @@ export default function RoomPage() {
         const messageList: Message[] = querySnapshot.docs.map((doc) => {
           const data = doc.data();
           return {
+            id: doc.id,
             text: data.text,
             createdAt: data.createdAt,
             username: data.username,
+            likes: data.likes || 0, 
           };
         });
         setMessages(messageList.reverse());
@@ -166,6 +171,7 @@ export default function RoomPage() {
         text: message,
         createdAt: new Date(),
         username: username,
+        likes: 0,
       });
   
       setMessage("");
@@ -230,6 +236,20 @@ export default function RoomPage() {
     setMessage(`:stamp_${stamp}`);
   };
 
+  const handleLike = async (messageId: string, currentLikes: number) => {
+    if (!roomId) return;
+  
+    const messageRef = doc(db, "rooms", roomId, "messages", messageId);
+  
+    try {
+      await updateDoc(messageRef, {
+        likes: currentLikes + 1, // Increment the likes by 1
+      });
+    } catch (error) {
+      console.error("Error updating likes: ", error);
+    }
+  };  
+
   return (
     <div>
       {/* header */}
@@ -243,7 +263,6 @@ export default function RoomPage() {
                 <button onClick={() => setIsVoteModalOpen(true)} className="w-full px-4 py-2 text-left hover:bg-zinc-50 duration-200 rounded-lg flex items-center">
                 <FiPlus className="mr-2 text-zinc-400" />投票を作成する
                 </button>
-                <div className="my-2 border-t border-zinc-200" />
                 <button onClick={deleteRoom} className="w-full text-red-600 px-4 py-2 text-left hover:bg-red-50 duration-200 rounded-lg flex items-center">
                   <FiTrash className="mr-2 text-red-400" />コミュニティを削除
                 </button>
@@ -251,7 +270,39 @@ export default function RoomPage() {
           </div>
       </div>
       
-    <div className="md:max-w-md w-full mx-auto p-4 md:py-8">
+      <div className="md:max-w-md w-full mx-auto p-4 md:py-8">
+        <div className="flex flex-col bg-white p-4 rounded-lg space-y-2">
+          <input type="text" value={username} onChange={handleUsernameChange} className="text-sm px-4 py-2 w-full placeholder:text-zinc-400 flex items-center rounded-lg outline-none bg-zinc-50" placeholder="表示名" />
+          <textarea value={message} onChange={(e) => setMessage(e.target.value)} className="resize-none bg-zinc-50 mt-2 px-4 py-2 rounded-lg w-full placeholder:text-zinc-400 outline-none" placeholder="メッセージを入力してください" rows={2}/>
+          <div className="flex mt-2">
+            <div className="relative">
+              <button className="bg-blue-50 text-blue-600 text-sm px-4 py-2 rounded-full" onClick={() => setIsSmileDropdownOpen(!isSmileDropdownOpen)}>
+                スタンプ
+              </button>
+              <div ref={smileDropdownRef} className={`absolute z-10 top-8 left-0 w-64 bg-white border border-zinc-200 rounded-lg shadow-lg p-4 transition-all duration-200 ease-in-out ${ isSmileDropdownOpen ? "scale-100 opacity-100" : "scale-95 opacity-0 pointer-events-none"}`}>
+                <p className="mb-4">スタンプ</p>
+                  <div className="flex flex-wrap gap-2">
+                      {stamps.map((stamp) => (
+                        <button
+                          key={stamp}
+                          onClick={() => handleStampClick(stamp)}
+                          className="w-10 h-10 aspect-square outline-none focus-visible:ring-2 ring-offset-2 hover:bg-zinc-200 duration-200 rounded-lg flex items-center justify-center"
+                        >
+                          <img src={`/stamps/${stamp}.png`}
+                            alt={stamp}
+                            className="h-8"
+                          />
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+            </div>
+            <button onClick={sendMessage} className="text-sm ml-auto bg-blue-600 text-white rounded-full whitespace-nowrap px-4 py-2">
+              送信
+            </button>
+          </div>
+        </div>
+
       {votes.length > 0 && (
         <div className="mt-8">
           <div className="space-y-4">
@@ -299,7 +350,7 @@ export default function RoomPage() {
         </div>
       )}
 
-      <div className=" space-y-4 flex flex-col max-h-[512px] overflow-y-auto">
+      <div className="mt-8 space-y-4 flex flex-col max-h-[512px] overflow-y-auto">
         {messages.length > 0 ? (
           messages.map((msg, index) => {
             const formattedText = msg.text.replace(/:stamp_([a-zA-Z0-9_]+)/g, (match, stamp) => {
@@ -317,6 +368,15 @@ export default function RoomPage() {
                   className="md flex flex-col whitespace-pre-wrap"
                   dangerouslySetInnerHTML={{ __html: marked(formattedText) }}
                 />
+
+                {/* それぞれの投稿にいいねする */}
+                <button
+                  onClick={() => handleLike(msg.id, msg.likes)}
+                  className="w-fit flex items-center text-sm mt-2 text-zinc-200 hover:text-red-400 duration-200"
+                >
+                  <FaHeart className="mr-0.5" />
+                  <p>{msg.likes}</p> {/* Display the current number of likes */}
+                </button>
               </div>
             );
           })
@@ -325,38 +385,6 @@ export default function RoomPage() {
             <p>No messages available.</p>
           </div>
         )}
-      </div>
-
-      <div className="mt-8 flex flex-col border border-zinc-200 rounded-lg p-2 shadow-sm sticky bottom-8 bg-white">
-        <input type="text" value={username} onChange={handleUsernameChange} className="px-4 py-2 bg-zinc-50 rounded-lg w-full placeholder:text-zinc-400" placeholder="表示名" />
-        <textarea value={message} onChange={(e) => setMessage(e.target.value)} className="mt-2 px-4 py-2 bg-zinc-50 rounded-lg w-full placeholder:text-zinc-400" placeholder="メッセージを入力してください" rows={2}/>
-        <div className="flex mt-2">
-          <div className="relative">
-            <button className="bg-blue-50 text-blue-600 px-3 py-1 rounded-lg" onClick={() => setIsSmileDropdownOpen(!isSmileDropdownOpen)}>
-              スタンプ
-            </button>
-            <div ref={smileDropdownRef} className={`absolute z-10 bottom-10 left-0 w-64 bg-white border border-zinc-200 rounded-lg shadow-lg p-4 transition-all duration-200 ease-in-out ${ isSmileDropdownOpen ? "scale-100 opacity-100" : "scale-95 opacity-0 pointer-events-none"}`}>
-              <p className="mb-4">Stamps</p>
-                <div className="flex flex-wrap gap-2">
-                    {stamps.map((stamp) => (
-                      <button
-                        key={stamp}
-                        onClick={() => handleStampClick(stamp)}
-                        className="w-10 h-10 aspect-square outline-none focus-visible:ring-2 ring-offset-2 hover:bg-zinc-200 duration-200 rounded-lg flex items-center justify-center"
-                      >
-                        <img src={`/stamps/${stamp}.png`}
-                          alt={stamp}
-                          className="h-8"
-                        />
-                      </button>
-                    ))}
-                  </div>
-                </div>
-          </div>
-          <button onClick={sendMessage} className="ml-auto bg-blue-600 text-white rounded-lg whitespace-nowrap px-3 py-1">
-            送信
-          </button>
-        </div>
       </div>
       
       <VoteModal  isOpen={isVoteModalOpen}  closeModal={() => setIsVoteModalOpen(false)}  voteQuestion={voteQuestion}  setVoteQuestion={setVoteQuestion}  voteOptions={voteOptions}  setVoteOptions={setVoteOptions}  createVote={createVote} />
