@@ -70,18 +70,19 @@ export default function Home() {
           <FiSearch className="mr-4 text-zinc-400" /><input placeholder="コミュニティを検索する" className="bg-transparent outline-none h-10 w-full placeholder:text-zinc-400" />
         </div>
 
-        <div className="space-y-4 h-32 overflow-y-auto">
+        <div className="mt-8 grid grid-cols-1 md:grid-cols-4 gap-8">
           {rooms.length === 0 ? (
-            <div className="flex items-center justify-center">
-            <p className="text-zinc-400">No rooms available.</p>
-              </div>
+            <div className="flex items-center justify-center"><p className="text-zinc-400">コミュニティが見つかりませんでした。</p></div>
           ) : (
             rooms.map((room, index) => (
-             <div key={index} className="p-4 rounded-lg bg-white flex items-center">
-                <p className="text-lg line-clamp-2 mr-4">{room.name}</p>
-                <div className="ml-auto flex">
-                  <Link href={`/rooms/${room.id}`}><p className="px-4 py-2 rounded-full bg-blue-600 text-white whitespace-nowrap">参加</p></Link>
-              </div>
+             <div key={index} className="rounded-lg bg-white overflow-hidden">
+              <img src={`https://api.dicebear.com/9.x/identicon/svg?seed=${room.id}&rowColor=60a5fa&backgroundColor=bfdbfe`} alt="avatar" className="h-32 w-full object-cover" />
+                <div className="flex p-4">
+                  <p className="text-lg line-clamp-2 mr-4">{room.name}</p>
+                  <div className="ml-auto flex">
+                    <Link href={`/rooms/${room.id}`}><p className="px-4 py-2 rounded-lg bg-blue-600 text-white whitespace-nowrap">参加</p></Link>
+                  </div>
+                </div>
               </div>
             ))
           )}
