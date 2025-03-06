@@ -68,7 +68,7 @@ export default function Home() {
         </div>
       </div>
 
-      <div className="md:container mx-auto p-8">
+      <div className="md:container mx-auto p-4 md:p-8">
         <div className="flex items-center px-4 py-2 rounded-lg bg-blue-200 text-blue-600 shadow">
           <FiInfo className="mr-2 hidden md:flex" /><p>アップデートしたので今日からこのサイトは野獣ドットコムという名前になります</p>
         </div>
