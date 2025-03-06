@@ -3,14 +3,14 @@ import { useState, useEffect, useRef } from "react";
 import { db } from "@/lib/firebaseConfig";
 import { collection, addDoc, query, orderBy, onSnapshot, Timestamp, doc, deleteDoc, getDocs, getDoc, updateDoc } from "firebase/firestore";
 import { usePathname } from "next/navigation"; 
-import { FaPaperPlane } from "react-icons/fa";
 import { formatDistanceToNow } from "date-fns"; 
 import Link from "next/link";
-import { FiChevronDown, FiChevronLeft, FiChevronUp, FiMoreHorizontal, FiPlus, FiSmile, FiTrash } from "react-icons/fi";
+import { FiMoreHorizontal, FiPlus, FiSmile, FiTrash } from "react-icons/fi";
 import Avatar from "@/components/Avatar";
 import { marked } from "marked";
 import VoteModal from "@/components/VoteModal";
 import PoopModal from "@/components/PoopModal";
+import Image from "next/image";
 
 interface Message {
   text: string;
@@ -41,7 +41,6 @@ export default function RoomPage() {
   const [voteOptions, setVoteOptions] = useState<string[]>(["", ""]);
   const [votes, setVotes] = useState<Vote[]>([]);
   const [poopModalOpen, setPoopModalOpen] = useState(false);
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isSmileDropdownOpen, setIsSmileDropdownOpen] = useState(false);
 
   const dropdownRef = useRef<HTMLDivElement>(null);
@@ -232,73 +231,27 @@ export default function RoomPage() {
   };
 
   return (
-    <div className="md:max-w-md w-full md:mx-auto p-4 md:py-8">
-      <div className="p-4 rounded-lg border border-zinc-200">
-        <div className="flex items-center">
-          <Link href="/" className="duration-200 flex outline-none duration-200 focus-visible:ring-2 ring-offset-2">
-            <FiChevronLeft />
-          </Link>
-          <h1 className="font-bold mx-2 line-clamp-1">{roomName || "Loading..."}</h1>
-          <div className="relative ml-auto z-10">
-            <button
-              className="w-8 h-8 rounded-full border border-zinc-200 flex items-center justify-center duration-200 bg-white outline-none focus-visible:ring-2 ring-offset-2"
-              onClick={() => setIsDropdownOpen(!isDropdownOpen)} // ドロップダウンの開閉
-            >
-              <FiMoreHorizontal />
-            </button>
-              <div ref={dropdownRef} className={`absolute right-0 mt-2 w-64 p-2 bg-white border border-zinc-200 roboto rounded-lg shadow-lg overflow-hidden transition-all duration-200 ease-in-out ${ isDropdownOpen ? "scale-100 opacity-100" : "scale-95 opacity-0 pointer-events-none"}`}>
+    <div>
+      {/* header */}
+      <div className="px-8 py-4 flex items-center justify-center select-none h-16 bg-white sticky top-0 z-50">
+        <Link href="/" className="flex items-center"><Image src="/logo.svg" alt="Logo" width={100} height={100} className="h-8 w-fit mr-2" /><p className="text-xl">{roomName || "Loading..."}</p></Link>
+        <div className="relative z-10 ml-2">
+          <button className="w-8 h-8 rounded-full border border-zinc-200 flex items-center justify-center duration-200 bg-white outline-none focus-visible:ring-2 ring-offset-2" onClick={() => setIsDropdownOpen(!isDropdownOpen)}>
+            <FiMoreHorizontal />
+          </button>
+              <div ref={dropdownRef} className={`absolute border border-zinc-200 right-0 mt-2 w-64 p-2 bg-white roboto rounded-lg shadow-lg overflow-hidden transition-all duration-200 ease-in-out ${ isDropdownOpen ? "scale-100 opacity-100" : "scale-95 opacity-0 pointer-events-none"}`}>
                 <button onClick={() => setIsVoteModalOpen(true)} className="w-full px-4 py-2 text-left hover:bg-zinc-50 duration-200 rounded-lg flex items-center">
-                <FiPlus className="mr-2 text-zinc-400" />Create a new vote
+                <FiPlus className="mr-2 text-zinc-400" />投票を作成する
                 </button>
                 <div className="my-2 border-t border-zinc-200" />
                 <button onClick={deleteRoom} className="w-full text-red-600 px-4 py-2 text-left hover:bg-red-50 duration-200 rounded-lg flex items-center">
-                  <FiTrash className="mr-2 text-red-400" />Delete Room
+                  <FiTrash className="mr-2 text-red-400" />コミュニティを削除
                 </button>
               </div>
           </div>
-        </div>
-        {isMenuOpen && (
-        <div className="flex flex-col mt-4">
-          <input type="text" value={username} onChange={handleUsernameChange} className="px-4 py-2 bg-zinc-50 rounded-lg w-full placeholder:text-zinc-400 outline-none duration-200 focus-visible:ring-2 ring-offset-2" placeholder="Your Name" />
-          <textarea value={message} onChange={(e) => setMessage(e.target.value)} className="md:hidden mt-2 px-4 py-2 bg-zinc-50 rounded-lg w-full placeholder:text-zinc-400 outline-none duration-200 focus-visible:ring-2 ring-offset-2" placeholder="Enter a message..." rows={2}/>
-          <div className="mt-2 flex md:hidden">
-          <div className="relative">
-            <button
-              className="bg-zinc-50 text-zinc-600 w-8 h-8 aspect-square rounded-lg flex items-center justify-center outline-none duration-200 focus-visible:ring-2 ring-offset-2"
-              onClick={() => setIsSmileDropdownOpen(!isSmileDropdownOpen)}
-            >
-              <FiSmile />
-            </button>
-                <div ref={smileDropdownRef} className={`absolute z-10 top-10 left-0 w-64 bg-white border border-zinc-200 rounded-lg shadow-lg p-4 transition-all duration-200 ease-in-out ${ isSmileDropdownOpen ? "scale-100 opacity-100" : "scale-95 opacity-0 pointer-events-none"}`}>
-                  <p className="mb-4">Stamps</p>
-                  <div className="flex flex-wrap gap-2">
-                    {stamps.map((stamp) => (
-                      <button
-                        key={stamp}
-                        onClick={() => handleStampClick(stamp)}
-                        className="w-10 h-10 aspect-square outline-none focus-visible:ring-2 ring-offset-2 hover:bg-zinc-200 duration-200 rounded-lg flex items-center justify-center"
-                      >
-                        <img src={`/stamps/${stamp}.png`}
-                          alt={stamp}
-                          className="h-8"
-                        />
-                      </button>
-                    ))}
-                  </div>
-                </div>
-          </div>
-            <button onClick={sendMessage} className="bg-zinc-800 text-white w-8 h-8 aspect-square rounded-lg flex items-center justify-center ml-auto">
-              <FaPaperPlane />
-            </button>
-          </div>
-        </div>
-        )}
-
-        <button onClick={() => setIsMenuOpen(!isMenuOpen)} className="outline-none duration-200 focus-visible:ring-2 ring-offset-2 mt-2 mx-auto bg-white menu-button w-8 h-4 text-zinc-400 rounded-full border border-zinc-200 flex items-center justify-center shadow-sm">
-          {isMenuOpen ? <FiChevronUp /> : <FiChevronDown />}
-        </button>
       </div>
-
+      
+    <div className="md:max-w-md w-full mx-auto py-8">
       {votes.length > 0 && (
         <div className="mt-8">
           <div className="space-y-4">
@@ -346,8 +299,7 @@ export default function RoomPage() {
         </div>
       )}
 
-      <div className="space-y-4 mt-8 flex flex-col max-h-[640px] overflow-y-auto">
-        <h2 className="text-xl font-bold">Chat</h2>
+      <div className=" space-y-4 flex flex-col max-h-[512px] overflow-y-auto">
         {messages.length > 0 ? (
           messages.map((msg, index) => {
             const formattedText = msg.text.replace(/:stamp_([a-zA-Z0-9_]+)/g, (match, stamp) => {
@@ -355,7 +307,7 @@ export default function RoomPage() {
             });
 
             return (
-              <div key={index} className="p-4 bg-white rounded-lg flex flex-col bg-zinc-50">
+              <div key={index} className="p-4 bg-white rounded-lg flex flex-col">
                 <div className="flex items-center mb-2">
                   <Avatar name={msg.username} />
                   <p className="text-sm font-bold mx-2 line-clamp-1">{msg.username}</p>
@@ -375,11 +327,12 @@ export default function RoomPage() {
         )}
       </div>
 
-      <div className="mt-8 hidden md:flex flex-col border border-zinc-200 rounded-lg p-2 shadow-sm sticky bottom-8 bg-white">
-        <textarea value={message} onChange={(e) => setMessage(e.target.value)} className="px-4 py-2 bg-zinc-50 rounded-lg w-full placeholder:text-zinc-400 outline-none duration-200 focus-visible:ring-2 ring-offset-2" placeholder="Enter a message..." rows={2}/>
+      <div className="mt-8 flex flex-col border border-zinc-200 rounded-lg p-2 shadow-sm sticky bottom-8 bg-white">
+        <input type="text" value={username} onChange={handleUsernameChange} className="px-4 py-2 bg-zinc-50 rounded-lg w-full placeholder:text-zinc-400" placeholder="表示名" />
+        <textarea value={message} onChange={(e) => setMessage(e.target.value)} className="mt-2 px-4 py-2 bg-zinc-50 rounded-lg w-full placeholder:text-zinc-400" placeholder="メッセージを入力してください" rows={2}/>
         <div className="flex mt-2">
           <div className="relative">
-            <button className="bg-zinc-50 text-zinc-600 w-8 h-8 aspect-square rounded-lg flex items-center justify-center outline-none duration-200 focus-visible:ring-2 ring-offset-2" onClick={() => setIsSmileDropdownOpen(!isSmileDropdownOpen)}>
+            <button className="bg-blue-50 text-blue-400 w-8 h-8 aspect-square rounded-lg flex items-center justify-center" onClick={() => setIsSmileDropdownOpen(!isSmileDropdownOpen)}>
               <FiSmile />
             </button>
             <div ref={smileDropdownRef} className={`absolute z-10 bottom-10 left-0 w-64 bg-white border border-zinc-200 rounded-lg shadow-lg p-4 transition-all duration-200 ease-in-out ${ isSmileDropdownOpen ? "scale-100 opacity-100" : "scale-95 opacity-0 pointer-events-none"}`}>
@@ -400,14 +353,15 @@ export default function RoomPage() {
                   </div>
                 </div>
           </div>
-          <button onClick={sendMessage} className="ml-auto bg-zinc-800 text-white w-8 h-8 aspect-square rounded-lg font-bold whitespace-nowrap flex items-center justify-center outline-none duration-200 focus-visible:ring-2 ring-offset-2">
-            <FaPaperPlane />
+          <button onClick={sendMessage} className="ml-auto bg-blue-600 text-white rounded-lg whitespace-nowrap px-3 py-1">
+            送信
           </button>
         </div>
       </div>
       
       <VoteModal  isOpen={isVoteModalOpen}  closeModal={() => setIsVoteModalOpen(false)}  voteQuestion={voteQuestion}  setVoteQuestion={setVoteQuestion}  voteOptions={voteOptions}  setVoteOptions={setVoteOptions}  createVote={createVote} />
       <PoopModal isOpen={poopModalOpen} close={() => setPoopModalOpen(false)} />
+    </div>
     </div>
   );
 }
