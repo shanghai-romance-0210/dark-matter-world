@@ -20,15 +20,15 @@ const VoteModal: React.FC<VoteModalProps> = ({
   if (!isOpen) return null;
 
   return (
-    <div className="z-50 fixed inset-0 flex justify-center items-center bg-zinc-400 bg-opacity-50 backdrop-blur">
+    <div className="z-50 fixed inset-0 flex justify-center items-center bg-black bg-opacity-50 backdrop-blur">
       <div className="bg-white p-6 rounded-lg w-3/4 md:w-1/4">
-        <h2 className="text-lg font-bold mb-4">Create a New Vote</h2>
+        <h2 className="text-xl font-normal mb-4">投票を作成する</h2>
         <input
           type="text"
           value={voteQuestion}
           onChange={(e) => setVoteQuestion(e.target.value)}
           placeholder="Enter your question"
-          className="placeholder:text-zinc-400 mb-4 w-full px-4 py-2 border border-zinc-200 rounded-lg outline-none duration-200 focus-visible:ring-2 ring-offset-2"
+          className="placeholder:text-zinc-400 mb-4 px-4 py-2 border border-zinc-200 rounded-lg w-full"
         />
         {voteOptions.map((option, index) => (
           <input
@@ -41,27 +41,27 @@ const VoteModal: React.FC<VoteModalProps> = ({
               setVoteOptions(updatedOptions);
             }}
             placeholder={`Option ${index + 1}`}
-            className="placeholder:text-zinc-400 mb-2 w-full px-4 py-2 border border-zinc-200 rounded-lg outline-none duration-200 focus-visible:ring-2 ring-offset-2"
+            className="placeholder:text-zinc-400 px-4 py-2 border border-zinc-200 rounded-lg mb-2 w-full"
           />
         ))}
         <button
           onClick={() => setVoteOptions([...voteOptions, ""])}
-          className="text-zinc-600 mb-4 text-sm p-0 outline-none duration-200 focus-visible:ring-2 ring-offset-2"
+          className="text-zinc-600 mb-4 text-sm p-0"
         >
           Add another option
         </button>
         <div className="flex justify-end">
           <button
             onClick={closeModal}
-            className="text-zinc-600 px-4 py-2 rounded-lg outline-none duration-200 focus-visible:ring-2 ring-offset-2 focus-visible:z-10"
+            className="bg-blue-50 text-blue-600 px-4 py-2 rounded-full mr-2"
           >
-            Cancel
+            キャンセル
           </button>
           <button
             onClick={createVote}
-            className="bg-zinc-800 text-white px-4 py-2 rounded-lg outline-none duration-200 focus-visible:ring-2 ring-offset-2"
+            className="bg-blue-600 text-white px-4 py-2 rounded-full"
           >
-            Create Vote
+            作成
           </button>
         </div>
       </div>
