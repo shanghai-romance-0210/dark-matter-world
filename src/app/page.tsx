@@ -1,9 +1,10 @@
-"use client";
-
+"use client"
 import { useState, useEffect } from "react";
 import { db } from "@/lib/firebaseConfig";
 import { collection, onSnapshot, doc, setDoc } from "firebase/firestore";
 import Link from "next/link";
+import { FiInfo, FiSearch } from "react-icons/fi";
+import Image from "next/image";
 
 interface Room {
   id: string;
@@ -15,9 +16,9 @@ export default function Home() {
   const [roomId, setRoomId] = useState("");
   const [rooms, setRooms] = useState<Room[]>([]);
   const [errorMessage, setErrorMessage] = useState("");
+  const [showModal, setShowModal] = useState(false); // State for showing the modal
 
   useEffect(() => {
-    // onSnapshot を利用してリアルタイムでデータを取得
     const unsubscribe = onSnapshot(collection(db, "rooms"), (querySnapshot) => {
       const roomList: Room[] = querySnapshot.docs.map((doc) => {
         return {
@@ -28,17 +29,15 @@ export default function Home() {
       setRooms(roomList);
     });
 
-    // コンポーネントがアンマウントされる際にリスナーを解除
     return () => unsubscribe();
   }, []);
 
   const createRoom = async () => {
     if (!roomName || !roomId) return;
 
-    // roomId が許可された文字だけで構成されているかを確認
     const validRoomId = /^[a-zA-Z0-9_.-]+$/.test(roomId);
     if (!validRoomId) {
-      setErrorMessage("Invalid room ID. Only letters, numbers, '-', '_', and '.' are allowed."); // エラーメッセージをセット
+      setErrorMessage("Invalid room ID. Only letters, numbers, '-', '_', and '.' are allowed.");
       return;
     }
 
@@ -47,70 +46,120 @@ export default function Home() {
       return;
     }
 
-    setErrorMessage(""); // 入力が有効であればエラーメッセージをクリア
+    setErrorMessage("");
 
     try {
-      const roomRef = doc(db, "rooms", roomId.toLowerCase()); // roomId を小文字に変換
+      const roomRef = doc(db, "rooms", roomId.toLowerCase());
       await setDoc(roomRef, { name: roomName });
       setRoomName("");
       setRoomId("");
+      setShowModal(false); // Close the modal after creating the room
     } catch (error) {
       console.error("Error creating room: ", error);
     }
   };
 
   return (
-    <div className="md:max-w-md w-full md:mx-auto p-4 md:py-8"> 
-      <div className="p-4 rounded-lg border border-zinc-200 shadow-sm">
-        <h1 className="text-xl font-bold mb-4">Create a New Room</h1>
-        <input
-          type="text"
-          value={roomName}
-          onChange={(e) => setRoomName(e.target.value)}
-          className="px-4 py-2 border border-zinc-200 rounded-lg mb-4 w-full placeholder:text-zinc-400 outline-none duration-200 focus-visible:ring-2 ring-offset-2"
-          placeholder="Room Name"
-        />
-        <input
-          type="text"
-          value={roomId}
-          onChange={(e) => setRoomId(e.target.value.toLowerCase())} // 入力を小文字に変換
-          className="px-4 py-2 border border-zinc-200 rounded-lg mb-4 w-full placeholder:text-zinc-400 outline-none duration-200 focus-visible:ring-2 ring-offset-2"
-          placeholder="Room ID"
-        />
-
-        {errorMessage && <p className="text-red-400 text-sm mb-4">{errorMessage}</p>}
-
-        <button
-          onClick={createRoom}
-          className="bg-zinc-800 text-white py-2 px-4 rounded-full w-full font-bold outline-none duration-200 focus-visible:ring-2 ring-offset-2"
-        >
-          Create
-        </button>
-      </div>
-      <div className="mt-8 p-4 rounded-lg border border-zinc-200 shadow-sm">
-        <h2 className="text-xl font-bold">Room List</h2>
-        <div className="mt-4 space-y-2">
-          {rooms.length === 0 ? (
-            <div className="flex items-center justify-center">
-              <p className="text-zinc-400">No rooms available.</p>
-            </div>
-          ) : (
-            rooms.map((room, index) => (
-              <div key={index} className="p-4 rounded-lg bg-zinc-50 shadow-sm flex items-center">
-                <div className="mr-4">
-                  <p className="font-bold line-clamp-2">{room.name}</p>
-                  <p className="text-sm text-zinc-400 mt-0.5">#{room.id}</p>
-                </div>
-                <div className="ml-auto flex">
-                  <Link href={`/rooms/${room.id}`} className="rounded-full outline-none duration-200 focus-visible:ring-2 ring-offset-2">
-                    <div className="px-4 py-2 rounded-full bg-zinc-800 text-white font-bold">Join</div>
-                  </Link>
-                </div>
-              </div>
-            ))
-          )}
+    <div>
+      <div className="px-8 py-4 flex items-center h-16 bg-white sticky top-0 z-50">
+        <Link href="/" className="flex items-center"><Image src="/logo.svg" alt="Logo" width={100} height={100} className="h-8 w-fit mr-2" /><p className="text-xl">野獣ドットコム</p></Link>
+        <div className="ml-auto flex items-center">
+          <button className="px-4 py-2 rounded-full bg-blue-600 text-white">ログイン</button>
         </div>
       </div>
+
+      <div className="md:container mx-auto p-8">
+        <div className="flex items-center px-4 py-2 rounded-lg bg-blue-200 text-blue-600 shadow">
+          <FiInfo className="mr-2 hidden md:flex" /><p>アップデートしたので今日からこのサイトは野獣ドットコムという名前になります</p>
+        </div>
+
+        <div className="mt-8 p-8 bg-white rounded-lg">
+          <div className="flex items-center">
+            <p className="text-xl">タイムライン</p>
+            <div className="flex items-center ml-auto">
+              <button className="px-4 py-2 rounded-full bg-blue-200 text-blue-600">もっと見る</button>
+            </div>
+          </div>
+          <div className="h-32 rounded-lg bg-blue-50 text-blue-400 flex items-center justify-center mt-4 p-4">
+            <p>話題のポストは...まだありません...</p>
+          </div>
+        </div>
+
+        <div className="mt-8 p-8 bg-white rounded-lg">
+          <div className="flex items-center">
+            <p className="text-xl">コミュニティ</p>
+            <div className="flex items-center ml-auto">
+              <button
+                className="px-4 py-2 rounded-full bg-blue-200 text-blue-600"
+                onClick={() => setShowModal(true)} // Show modal when clicked
+              >
+                新規作成
+              </button>
+            </div>
+          </div>
+          <div className="my-4">
+            <div className="flex items-center px-4 h-10 overflow-hidden rounded-lg border border-zinc-200 shadow-sm">
+              <FiSearch className="mr-4 text-zinc-400" /><input placeholder="コミュニティを検索する(まだできない)" className="bg-transparent outline-none h-10 w-full placeholder:text-zinc-400" />
+            </div>
+          </div>
+          <div className="space-y-4 h-32 overflow-y-auto">
+            {rooms.length === 0 ? (
+              <div className="flex items-center justify-center">
+                <p className="text-zinc-400">No rooms available.</p>
+              </div>
+            ) : (
+              rooms.map((room, index) => (
+                <div key={index} className="p-4 rounded-lg bg-zinc-50 flex items-center">
+                  <p className="text-lg line-clamp-2 mr-4">{room.name}</p>
+                  <div className="ml-auto flex">
+                    <Link href={`/rooms/${room.id}`}><p className="px-4 py-2 rounded-full bg-blue-600 text-white">参加</p></Link>
+                  </div>
+                </div>
+              ))
+            )}
+          </div>
+        </div>
+      </div>
+
+      {/* Modal */}
+      {showModal && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50 backdrop-blur">
+          <div className="bg-white p-6 rounded-lg w-3/4 md:w-1/4">
+            <h1 className="text-xl mb-4">ルームを新規作成</h1>
+            <input
+              type="text"
+              value={roomName}
+              onChange={(e) => setRoomName(e.target.value)}
+              className="px-4 py-2 border border-zinc-200 rounded-lg mb-2 w-full"
+              placeholder="ルームの名前"
+            />
+            <input
+              type="text"
+              value={roomId}
+              onChange={(e) => setRoomId(e.target.value.toLowerCase())}
+              className="px-4 py-2 border border-zinc-200 rounded-lg mb-4 w-full"
+              placeholder="ルームID"
+            />
+
+            {errorMessage && <p className="text-red-400 text-sm mb-4">{errorMessage}</p>}
+
+            <div className="flex items-center justify-end">
+              <button
+                onClick={() => setShowModal(false)}
+                className="bg-blue-200 text-blue-600 py-2 px-4 rounded-full"
+              >
+                Close
+              </button>
+              <button
+                onClick={createRoom}
+                className="bg-blue-600 text-white py-2 px-4 rounded-full ml-2"
+              >
+                Create
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
