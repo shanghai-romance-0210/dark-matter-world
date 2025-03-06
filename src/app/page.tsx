@@ -15,8 +15,10 @@ export default function Home() {
   const [roomName, setRoomName] = useState("");
   const [roomId, setRoomId] = useState("");
   const [rooms, setRooms] = useState<Room[]>([]);
+  const [filteredRooms, setFilteredRooms] = useState<Room[]>([]);
+  const [searchQuery, setSearchQuery] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
-  const [showModal, setShowModal] = useState(false); // State for showing the modal
+  const [showModal, setShowModal] = useState(false);
 
   useEffect(() => {
     const unsubscribe = onSnapshot(collection(db, "rooms"), (querySnapshot) => {
@@ -27,10 +29,22 @@ export default function Home() {
         };
       });
       setRooms(roomList);
+      setFilteredRooms(roomList); // Initially set filteredRooms to all rooms
     });
 
     return () => unsubscribe();
   }, []);
+
+  useEffect(() => {
+    if (searchQuery.trim() === "") {
+      setFilteredRooms(rooms); // If search query is empty, show all rooms
+    } else {
+      const filtered = rooms.filter(room =>
+        room.name.toLowerCase().includes(searchQuery.toLowerCase()) || room.id.toLowerCase().includes(searchQuery.toLowerCase())
+      );
+      setFilteredRooms(filtered);
+    }
+  }, [searchQuery, rooms]);
 
   const createRoom = async () => {
     if (!roomName || !roomId) return;
@@ -53,7 +67,7 @@ export default function Home() {
       await setDoc(roomRef, { name: roomName });
       setRoomName("");
       setRoomId("");
-      setShowModal(false); // Close the modal after creating the room
+      setShowModal(false);
     } catch (error) {
       console.error("Error creating room: ", error);
     }
@@ -67,25 +81,36 @@ export default function Home() {
 
       <div className="md:container mx-auto p-4 md:p-8">
         <div className="flex items-center px-4 h-10 overflow-hidden rounded-lg border border-zinc-200 shadow-sm bg-white">
-          <FiSearch className="mr-4 text-zinc-400" /><input placeholder="コミュニティを検索する" className="bg-transparent outline-none h-10 w-full placeholder:text-zinc-400" />
+          <FiSearch className="mr-4 text-zinc-400" />
+          <input
+            placeholder="コミュニティを検索する"
+            className="bg-transparent outline-none h-10 w-full placeholder:text-zinc-400"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)} // Update search query on input change
+          />
         </div>
 
+        {/* Message when no communities found */}
+        {filteredRooms.length === 0 && (
+          <div className="mt-8 flex items-center justify-center">
+            <p className="text-zinc-400">コミュニティが見つかりませんでした。</p>
+          </div>
+        )}
+
         <div className="mt-8 grid grid-cols-1 md:grid-cols-4 gap-8">
-          {rooms.length === 0 ? (
-            <div className="flex items-center justify-center"><p className="text-zinc-400">コミュニティが見つかりませんでした。</p></div>
-          ) : (
-            rooms.map((room, index) => (
-             <div key={index} className="rounded-lg bg-white overflow-hidden">
+          {filteredRooms.length > 0 && filteredRooms.map((room, index) => (
+            <div key={index} className="rounded-lg bg-white overflow-hidden">
               <img src={`https://api.dicebear.com/9.x/identicon/svg?seed=${room.id}&rowColor=60a5fa&backgroundColor=bfdbfe`} alt="avatar" className="h-32 w-full object-cover" />
-                <div className="flex p-4">
-                  <p className="text-lg line-clamp-2 mr-4">{room.name}</p>
-                  <div className="ml-auto flex">
-                    <Link href={`/rooms/${room.id}`}><p className="px-4 py-2 rounded-lg bg-blue-600 text-white whitespace-nowrap">参加</p></Link>
-                  </div>
+              <div className="flex p-4">
+                <p className="text-lg line-clamp-2 mr-4">{room.name}</p>
+                <div className="ml-auto flex">
+                  <Link href={`/rooms/${room.id}`}>
+                    <p className="px-4 py-2 rounded-lg bg-blue-600 text-white whitespace-nowrap">参加</p>
+                  </Link>
                 </div>
               </div>
-            ))
-          )}
+            </div>
+          ))}
         </div>
       </div>
 
