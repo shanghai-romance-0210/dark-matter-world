@@ -64,7 +64,7 @@ export default function Home() {
       <div className="px-8 py-4 flex items-center h-16 bg-white sticky top-0 z-50">
         <Link href="/" className="flex items-center"><Image src="/logo.svg" alt="Logo" width={100} height={100} className="h-8 w-fit mr-2" /><p className="text-xl">野獣ドットコム</p></Link>
         <div className="ml-auto flex items-center">
-          <button className="px-4 py-2 rounded-full bg-blue-600 text-white">ログイン</button>
+          <button className="px-4 py-2 rounded-full bg-blue-600 text-white whitespace-nowrap">ログイン</button>
         </div>
       </div>
 
@@ -77,7 +77,7 @@ export default function Home() {
           <div className="flex items-center">
             <p className="text-xl">タイムライン</p>
             <div className="flex items-center ml-auto">
-              <button className="px-4 py-2 rounded-full bg-blue-200 text-blue-600">もっと見る</button>
+              <button className="px-4 py-2 rounded-full bg-blue-200 text-blue-600 whitespace-nowrap">もっと見る</button>
             </div>
           </div>
           <div className="h-32 rounded-lg bg-blue-50 text-blue-400 flex items-center justify-center mt-4 p-4">
@@ -90,7 +90,7 @@ export default function Home() {
             <p className="text-xl">コミュニティ</p>
             <div className="flex items-center ml-auto">
               <button
-                className="px-4 py-2 rounded-full bg-blue-200 text-blue-600"
+                className="px-4 py-2 rounded-full bg-blue-200 text-blue-600 whitespace-nowrap"
                 onClick={() => setShowModal(true)} // Show modal when clicked
               >
                 新規作成
@@ -112,7 +112,7 @@ export default function Home() {
                 <div key={index} className="p-4 rounded-lg bg-zinc-50 flex items-center">
                   <p className="text-lg line-clamp-2 mr-4">{room.name}</p>
                   <div className="ml-auto flex">
-                    <Link href={`/rooms/${room.id}`}><p className="px-4 py-2 rounded-full bg-blue-600 text-white">参加</p></Link>
+                    <Link href={`/rooms/${room.id}`}><p className="px-4 py-2 rounded-full bg-blue-600 text-white whitespace-nowrap">参加</p></Link>
                   </div>
                 </div>
               ))
