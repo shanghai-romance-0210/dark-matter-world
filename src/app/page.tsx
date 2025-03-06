@@ -81,7 +81,7 @@ export default function Home() {
             </div>
           </div>
           <div className="h-32 rounded-lg bg-blue-50 text-blue-400 flex items-center justify-center mt-4 p-4">
-            <p>話題のポストは...まだありません...</p>
+            <p>話題のポストはまだありません</p>
           </div>
         </div>
 
