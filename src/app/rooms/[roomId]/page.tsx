@@ -12,6 +12,7 @@ import VoteModal from "@/components/VoteModal";
 import PoopModal from "@/components/PoopModal";
 import Image from "next/image";
 import { FaHeart } from "react-icons/fa";
+import Button from "@/components/ui/Button";
 
 interface Message {
   id: string;
@@ -243,7 +244,7 @@ export default function RoomPage() {
   
     try {
       await updateDoc(messageRef, {
-        likes: currentLikes + 1, // Increment the likes by 1
+        likes: currentLikes + 1,
       });
     } catch (error) {
       console.error("Error updating likes: ", error);
@@ -252,22 +253,16 @@ export default function RoomPage() {
 
   return (
     <div>
-      {/* header */}
+      {/* Header */}
       <div className="px-8 py-4 flex items-center justify-center select-none h-16 bg-white sticky top-0 z-50">
-        <Link href="/" className="flex items-center"><Image src="/logo.svg" alt="Logo" width={100} height={100} className="h-8 w-fit mr-2" /><p className="text-xl">{roomName || "Loading..."}</p></Link>
-        <div className="relative z-10 ml-2">
-          <button className="text-sm px-4 py-2 rounded-full border border-zinc-200 bg-white" onClick={() => setIsDropdownOpen(!isDropdownOpen)}>
-            設定
-          </button>
-              <div ref={dropdownRef} className={`absolute border border-zinc-200 right-0 mt-2 w-64 p-2 bg-white roboto rounded-lg shadow-lg overflow-hidden transition-all duration-200 ease-in-out ${ isDropdownOpen ? "scale-100 opacity-100" : "scale-95 opacity-0 pointer-events-none"}`}>
-                <button onClick={() => setIsVoteModalOpen(true)} className="w-full px-4 py-2 text-left hover:bg-zinc-200 duration-200 rounded-lg flex items-center">
-                <FiPlus className="mr-2 text-zinc-400" />投票を作成する
-                </button>
-                <button onClick={deleteRoom} className="w-full text-red-600 px-4 py-2 text-left hover:bg-red-50 duration-200 rounded-lg flex items-center">
-                  <FiTrash className="mr-2 text-red-400" />コミュニティを削除する
-                </button>
-              </div>
+        <Link href="/" className="flex items-center"><Image src="/logo.svg" alt="Logo" width={100} height={100} className="h-7 w-fit" /><p className="mx-2 text-lg">{roomName || "Loading..."}</p></Link>
+        <div className="relative z-10">
+          <Button variant="outline" size="sm" onClick={() => setIsDropdownOpen(!isDropdownOpen)}>設定</Button>
+          <div ref={dropdownRef} className={`absolute border border-zinc-200 right-0 mt-2 w-64 bg-white rounded-lg shadow-lg p-2 overflow-hidden transition-all duration-200 ease-in-out ${ isDropdownOpen ? "scale-100 opacity-100" : "scale-95 opacity-0 pointer-events-none"}`}>
+            <Button onClick={() => setIsVoteModalOpen(true)} variant="text" icon={<FiPlus />} className="rounded-none w-full">投票を作成する</Button>
+            <Button onClick={deleteRoom} variant="text" icon={<FiTrash />} className="rounded-none w-full">コミュニティを削除する</Button>
           </div>
+        </div>
       </div>
       
       <div className="md:max-w-md w-full mx-auto p-4 md:py-8">
@@ -292,7 +287,7 @@ export default function RoomPage() {
                   <div key={index} className="space-y-2">
                     <div className="flex items-center">
                       <p>{option}</p>
-                      <span className="ml-2 text-sm relative text-zinc-400 roboto">{`(${vote.votes[index]})`}</span>
+                      <span className="ml-2 text-sm relative text-zinc-400">{`(${vote.votes[index]})`}</span>
                     </div>
                     <button
                       onClick={() => handleVote(vote.id, index)}
@@ -321,30 +316,16 @@ export default function RoomPage() {
           <textarea value={message} onChange={(e) => setMessage(e.target.value)} className="resize-none bg-zinc-50 mt-2 px-4 py-2 rounded-lg w-full placeholder:text-zinc-400 outline-none" placeholder="メッセージを入力してください" rows={2}/>
           <div className="flex mt-2">
             <div className="relative">
-              <button className="bg-blue-50 text-blue-600 text-sm px-4 py-2 rounded-full" onClick={() => setIsSmileDropdownOpen(!isSmileDropdownOpen)}>
-                スタンプ
-              </button>
-              <div ref={smileDropdownRef} className={`absolute z-10 top-8 left-0 w-64 bg-white border border-zinc-200 rounded-lg shadow-lg p-4 transition-all duration-200 ease-in-out ${ isSmileDropdownOpen ? "scale-100 opacity-100" : "scale-95 opacity-0 pointer-events-none"}`}>
-                <p className="mb-4">スタンプ</p>
-                  <div className="flex flex-wrap gap-2">
-                      {stamps.map((stamp) => (
-                        <button
-                          key={stamp}
-                          onClick={() => handleStampClick(stamp)}
-                          className="w-10 h-10 aspect-square outline-none focus-visible:ring-2 ring-offset-2 hover:bg-zinc-200 duration-200 rounded-lg flex items-center justify-center"
-                        >
-                          <img src={`/stamps/${stamp}.png`}
-                            alt={stamp}
-                            className="h-8"
-                          />
-                        </button>
-                      ))}
-                    </div>
-                  </div>
+              <Button variant="secondary" size="sm" onClick={() => setIsSmileDropdownOpen(!isSmileDropdownOpen)}>スタンプ</Button>
+              <div ref={smileDropdownRef} className={`flex flex-wrap gap-2 absolute z-10 mt-2 left-0 w-64 bg-white border border-zinc-200 rounded-lg shadow-lg p-4 transition-all duration-200 ease-in-out ${ isSmileDropdownOpen ? "scale-100 opacity-100" : "scale-95 opacity-0 pointer-events-none"}`}>
+                {stamps.map((stamp) => (
+                  <button key={stamp} onClick={() => handleStampClick(stamp)} className="w-10 h-10 aspect-square hover:bg-zinc-200 duration-200 bg-white flex items-center justify-center">
+                    <Image src={`/stamps/${stamp}.png`} alt={stamp} width={100} height={100} className="w-auto h-8" />
+                  </button>
+                ))}
+              </div>
             </div>
-            <button onClick={sendMessage} className="text-sm ml-auto bg-blue-600 text-white rounded-full whitespace-nowrap px-4 py-2">
-              送信
-            </button>
+            <Button onClick={sendMessage} size="sm" className="ml-auto">送信</Button>
           </div>
         </div>
 

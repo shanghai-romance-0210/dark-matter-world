@@ -40,15 +40,12 @@ const VoteModal: React.FC<VoteModalProps> = ({
               updatedOptions[index] = e.target.value;
               setVoteOptions(updatedOptions);
             }}
-            placeholder={`Option ${index + 1}`}
+            placeholder={`選択肢 ${index + 1}`}
             className="placeholder:text-zinc-400 px-4 py-2 border border-zinc-200 rounded-lg mb-2 w-full"
           />
         ))}
-        <button
-          onClick={() => setVoteOptions([...voteOptions, ""])}
-          className="text-zinc-600 mb-4 text-sm p-0"
-        >
-          Add another option
+        <button onClick={() => setVoteOptions([...voteOptions, ""])} className="text-zinc-600 mb-4 text-sm p-0">
+          選択肢を追加
         </button>
         <div className="flex justify-end">
           <button
