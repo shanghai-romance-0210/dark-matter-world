@@ -75,8 +75,8 @@ export default function Home() {
 
   return (
     <div>
-      <div className="px-8 py-4 flex items-center justify-center select-none h-16 bg-white sticky top-0 z-50">
-        <Link href="/" className="flex items-center"><Image src="/logo.svg" alt="Logo" width={100} height={100} className="h-8 w-fit mr-2" /><p className="text-xl">野獣ドットコム</p></Link>
+      <div className="px-8 py-4 flex items-center justify-center select-none h-16 bg-white sticky top-0 z-50 shadow-md">
+        <Link href="/" className="flex items-center"><Image src="/logo.svg" alt="Logo" width={100} height={100} className="h-7 w-fit mr-4" /><p className="text-lg">野獣ドットコム</p></Link>
       </div>
 
       <div className="md:container mx-auto p-4 md:p-8">

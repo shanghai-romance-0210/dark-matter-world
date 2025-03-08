@@ -249,14 +249,14 @@ export default function RoomPage() {
     } catch (error) {
       console.error("Error updating likes: ", error);
     }
-  };  
+  };
 
   return (
     <div>
       {/* Header */}
-      <div className="px-8 py-4 flex items-center justify-center select-none h-16 bg-white sticky top-0 z-50">
-        <Link href="/" className="flex items-center"><Image src="/logo.svg" alt="Logo" width={100} height={100} className="h-7 w-fit" /><p className="mx-2 text-lg">{roomName || "Loading..."}</p></Link>
-        <div className="relative z-10">
+      <div className="px-8 py-4 flex items-center select-none h-16 bg-white sticky top-0 z-50 shadow-md">
+        <Link href="/" className="flex items-center"><Image src="/logo.svg" alt="Logo" width={100} height={100} className="h-7 w-fit" /></Link><p className="mx-4 line-clamp-1 text-lg">{roomName || "Loading..."}</p>
+        <div className="ml-auto relative z-10">
           <Button variant="outline" size="sm" onClick={() => setIsDropdownOpen(!isDropdownOpen)}>設定</Button>
           <div ref={dropdownRef} className={`absolute border border-zinc-200 right-0 mt-2 w-64 bg-white rounded-lg shadow-lg p-2 overflow-hidden transition-all duration-200 ease-in-out ${ isDropdownOpen ? "scale-100 opacity-100" : "scale-95 opacity-0 pointer-events-none"}`}>
             <Button onClick={() => setIsVoteModalOpen(true)} variant="text" icon={<FiPlus />} className="rounded-none w-full">投票を作成する</Button>
@@ -265,108 +265,105 @@ export default function RoomPage() {
         </div>
       </div>
       
-      <div className="md:max-w-md w-full mx-auto p-4 md:py-8">
-        {votes.length > 0 && (
-          <div className="space-y-4 mb-8">
-            {votes.map((vote) => (
-              <div key={vote.id} className="p-4 rounded-lg bg-white shadow-md">
-                <div className="flex items-center mb-4">
-                  <h3 className="text-lg font-normal">{vote.question}</h3>
-                  <button
-                    onClick={() => deleteVote(vote.id)}
-                    className="ml-auto text-red-600 px-4 py-2 text-sm bg-red-50 rounded-full"
-                  >
-                    削除
-                  </button>
-                </div>
-                <div className="space-y-4">
-                {vote.options.map((option: string, index: number) => {
-                const totalVotes = vote.votes.reduce((a, b) => a + b, 0);
-                const hasVotes = totalVotes > 0;
-                return (
-                  <div key={index} className="space-y-2">
-                    <div className="flex items-center">
-                      <p>{option}</p>
-                      <span className="ml-2 text-sm relative text-zinc-400">{`(${vote.votes[index]})`}</span>
+      {/* Body */}
+      <div className="p-4 md:py-8 md:max-w-md w-full mx-auto">
+            {messages.length > 0 && (<div className="space-y-4">
+              {votes.map((vote) => (
+                <div key={vote.id} className="p-4 rounded-lg bg-white shadow-sm mb-8">
+                  <div className="flex items-center mb-4">
+                    <h3 className="font-normal text-lg">{vote.question}</h3>
+                    <div className="flex items-center ml-auto">
+                      <Button  onClick={() => deleteVote(vote.id)} variant="danger" size="sm" className="mr-2">削除</Button>
                     </div>
-                    <button
-                      onClick={() => handleVote(vote.id, index)}
-                      className="w-full h-8 rounded-lg relative overflow-hidden bg-zinc-50"
-                    >
-                      <div
-                        className={`absolute inset-0 ${hasVotes ? 'bg-green-400' : 'bg-zinc-50'}`}
-                        style={{
-                          width: hasVotes
-                            ? `${Math.round((vote.votes[index] / totalVotes) * 100)}%`
-                            : '0%'
-                        }}
-                      />
+                  </div>
+                  <div className="space-y-4">
+                    {vote.options.map((option: string, index: number) => {
+                      const totalVotes = vote.votes.reduce((a, b) => a + b, 0);
+                      const hasVotes = totalVotes > 0;
+                      return (
+                        <div key={index} className="space-y-2">
+                          <div className="flex items-center">
+                            <p>{option}</p>
+                            <span className="ml-2 text-sm relative text-zinc-400">{`(${vote.votes[index]})`}</span>
+                          </div>
+                          <button
+                            onClick={() => handleVote(vote.id, index)}
+                            className="w-full h-8 rounded-lg relative overflow-hidden bg-zinc-50"
+                          >
+                            <div
+                              className={`absolute inset-0 ${hasVotes ? 'bg-green-400' : 'bg-zinc-50'}`}
+                              style={{
+                                width: hasVotes
+                                  ? `${Math.round((vote.votes[index] / totalVotes) * 100)}%`
+                                  : '0%',
+                              }}
+                            />
+                          </button>
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
+              ))}
+            </div>)}
+
+          <div className="flex flex-col bg-white p-4 rounded-lg space-y-2">
+            <input type="text" value={username} onChange={handleUsernameChange} className="px-4 py-2 w-full placeholder:text-zinc-400 flex items-center rounded-lg outline-none bg-zinc-50" placeholder="表示名" />
+            <textarea value={message} onChange={(e) => setMessage(e.target.value)} className="resize-none bg-zinc-50 mt-2 px-4 py-2 rounded-lg w-full placeholder:text-zinc-400 outline-none" placeholder="メッセージを入力してください" rows={2}/>
+            <div className="flex mt-2">
+              <div className="relative">
+                <Button variant="secondary" size="sm" onClick={() => setIsSmileDropdownOpen(!isSmileDropdownOpen)}>スタンプ</Button>
+                <div ref={smileDropdownRef} className={`flex flex-wrap gap-2 absolute z-10 mt-2 left-0 w-64 bg-white border border-zinc-200 rounded-lg shadow-lg p-4 transition-all duration-200 ease-in-out ${ isSmileDropdownOpen ? "scale-100 opacity-100" : "scale-95 opacity-0 pointer-events-none"}`}>
+                  {stamps.map((stamp) => (
+                    <button key={stamp} onClick={() => handleStampClick(stamp)} className="w-10 h-10 aspect-square hover:bg-zinc-200 duration-200 bg-white flex items-center justify-center">
+                      <Image src={`/stamps/${stamp}.png`} alt={stamp} width={100} height={100} className="w-auto h-8" />
+                    </button>
+                  ))}
+                </div>
+              </div>
+              <Button onClick={sendMessage} size="sm" className="ml-auto">送信</Button>
+            </div>
+            </div>
+
+        <div className="mt-8 space-y-4 flex flex-col">
+          {messages.length > 0 ? (
+            messages.map((msg, index) => {
+              const formattedText = msg.text.replace(/:stamp_([a-zA-Z0-9_]+)/g, (match, stamp) => {
+                return `<div class="max-h-16"><img src="/stamps/${stamp}.png" alt="stamp" class="h-16" /></div>`;
+              });
+
+              return (
+                <div key={index} className="p-4 bg-white rounded-lg flex flex-col">
+                  <div className="flex items-center mb-2">
+                    <Avatar name={msg.username} />
+                    <p className="text-sm font-bold mx-2 line-clamp-1">{msg.username}</p>
+                    <p className="text-sm text-zinc-400 whitespace-nowrap">{formatRelativeTime(msg.createdAt)}</p>
+                  </div>
+                  <div
+                    className="md flex flex-col whitespace-pre-wrap"
+                    dangerouslySetInnerHTML={{ __html: marked(formattedText) }}
+                  />
+
+                  <div className="mt-2 flex items-center">
+                    <button onClick={() => handleLike(msg.id, msg.likes)} className="w-fit flex items-center text-sm text-zinc-200 hover:text-red-400 duration-200">
+                      <FaHeart className="mr-0.5" />
+                      <p>{msg.likes}</p>
                     </button>
                   </div>
-                );
-              })}
                 </div>
-              </div>
-            ))}
-          </div>
-        )}
-
-        <div className="flex flex-col bg-white p-4 rounded-lg space-y-2">
-          <input type="text" value={username} onChange={handleUsernameChange} className="px-4 py-2 w-full placeholder:text-zinc-400 flex items-center rounded-lg outline-none bg-zinc-50" placeholder="表示名" />
-          <textarea value={message} onChange={(e) => setMessage(e.target.value)} className="resize-none bg-zinc-50 mt-2 px-4 py-2 rounded-lg w-full placeholder:text-zinc-400 outline-none" placeholder="メッセージを入力してください" rows={2}/>
-          <div className="flex mt-2">
-            <div className="relative">
-              <Button variant="secondary" size="sm" onClick={() => setIsSmileDropdownOpen(!isSmileDropdownOpen)}>スタンプ</Button>
-              <div ref={smileDropdownRef} className={`flex flex-wrap gap-2 absolute z-10 mt-2 left-0 w-64 bg-white border border-zinc-200 rounded-lg shadow-lg p-4 transition-all duration-200 ease-in-out ${ isSmileDropdownOpen ? "scale-100 opacity-100" : "scale-95 opacity-0 pointer-events-none"}`}>
-                {stamps.map((stamp) => (
-                  <button key={stamp} onClick={() => handleStampClick(stamp)} className="w-10 h-10 aspect-square hover:bg-zinc-200 duration-200 bg-white flex items-center justify-center">
-                    <Image src={`/stamps/${stamp}.png`} alt={stamp} width={100} height={100} className="w-auto h-8" />
-                  </button>
-                ))}
-              </div>
+              );
+            })
+          ) : (
+            <div className="text-center text-zinc-400">
+              <p>No messages available.</p>
             </div>
-            <Button onClick={sendMessage} size="sm" className="ml-auto">送信</Button>
-          </div>
+          )}
         </div>
+        </div>
+    
 
-      <div className="mt-8 space-y-4 flex flex-col">
-        {messages.length > 0 ? (
-          messages.map((msg, index) => {
-            const formattedText = msg.text.replace(/:stamp_([a-zA-Z0-9_]+)/g, (match, stamp) => {
-              return `<div class="max-h-16"><img src="/stamps/${stamp}.png" alt="stamp" class="h-16" /></div>`;
-            });
-
-            return (
-              <div key={index} className="p-4 bg-white rounded-lg flex flex-col">
-                <div className="flex items-center mb-2">
-                  <Avatar name={msg.username} />
-                  <p className="text-sm font-bold mx-2 line-clamp-1">{msg.username}</p>
-                  <p className="text-sm text-zinc-400 whitespace-nowrap">{formatRelativeTime(msg.createdAt)}</p>
-                </div>
-                <div
-                  className="md flex flex-col whitespace-pre-wrap"
-                  dangerouslySetInnerHTML={{ __html: marked(formattedText) }}
-                />
-
-                <div className="mt-2 flex items-center">
-                  <button onClick={() => handleLike(msg.id, msg.likes)} className="w-fit flex items-center text-sm text-zinc-200 hover:text-red-400 duration-200">
-                    <FaHeart className="mr-0.5" />
-                    <p>{msg.likes}</p>
-                  </button>
-                </div>
-              </div>
-            );
-          })
-        ) : (
-          <div className="text-center text-zinc-400">
-            <p>No messages available.</p>
-          </div>
-        )}
-      </div>
-      
       <VoteModal  isOpen={isVoteModalOpen}  closeModal={() => setIsVoteModalOpen(false)}  voteQuestion={voteQuestion}  setVoteQuestion={setVoteQuestion}  voteOptions={voteOptions}  setVoteOptions={setVoteOptions}  createVote={createVote} />
       <PoopModal isOpen={poopModalOpen} close={() => setPoopModalOpen(false)} />
-    </div>
     </div>
   );
 }

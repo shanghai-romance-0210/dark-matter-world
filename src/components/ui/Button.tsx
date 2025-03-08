@@ -1,7 +1,7 @@
 import React from 'react';
 
 interface ButtonProps {
-  onClick: () => void;
+  onClick?: () => void;
   icon?: React.ReactNode;
   variant?: 'primary' | 'secondary' | 'danger' | 'outline' | "text";
   className?: string;
@@ -19,13 +19,13 @@ const Button: React.FC<ButtonProps> = ({
   children,
   size = 'md',
 }) => {
-  const baseStyles = 'flex items-center rounded-full px-4 py-2 whitespace-nowrap active:scale-90 duration-200';
+  const baseStyles = 'flex items-center rounded-full whitespace-nowrap active:scale-90 duration-200 px-4 py-2';
 
   const variantStyles = {
     primary: 'bg-blue-600 text-white',
     secondary: 'bg-blue-50 text-blue-600',
     danger: 'bg-red-50 text-red-600',
-    outline: 'bg-transparent backdrop-blur text-zinc-600 border border-zinc-200',
+    outline: 'bg-white text-zinc-600 border border-zinc-200',
     text: "bg-transparent text-zinc-600"
   };
 
