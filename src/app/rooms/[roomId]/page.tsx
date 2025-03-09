@@ -11,7 +11,7 @@ import { marked } from "marked";
 import VoteModal from "@/components/VoteModal";
 import PoopModal from "@/components/PoopModal";
 import Image from "next/image";
-import { FaHeart } from "react-icons/fa";
+import { FaHeart, FaReply } from "react-icons/fa";
 import Button from "@/components/ui/Button";
 
 interface Message {
@@ -20,6 +20,7 @@ interface Message {
   createdAt: Timestamp;
   username: string;
   likes: number;
+  replyTo: string | null;
 }
 
 interface Vote {
@@ -46,6 +47,7 @@ export default function RoomPage() {
   const [votes, setVotes] = useState<Vote[]>([]);
   const [poopModalOpen, setPoopModalOpen] = useState(false);
   const [isSmileDropdownOpen, setIsSmileDropdownOpen] = useState(false);
+  const [selectedReplyMessageId, setSelectedReplyMessageId] = useState<string | null>(null);
 
   const dropdownRef = useRef<HTMLDivElement>(null);
   const smileDropdownRef = useRef<HTMLDivElement>(null); 
@@ -130,6 +132,7 @@ export default function RoomPage() {
             createdAt: data.createdAt,
             username: data.username,
             likes: data.likes || 0, 
+            replyTo: data.replyTo || null,
           };
         });
         setMessages(messageList.reverse());
@@ -162,24 +165,28 @@ export default function RoomPage() {
 
   const sendMessage = async () => {
     if (!message || !roomId || !username) return;
-
-    if (message.toLowerCase() === "poop") {
-      setPoopModalOpen(true);
-    }
   
     try {
-      await addDoc(collection(db, "rooms", roomId, "messages"), {
+      const messageData: Message = {
+        id: "",
         text: message,
-        createdAt: new Date(),
+        createdAt: Timestamp.fromDate(new Date()),
         username: username,
         likes: 0,
-      });
+        replyTo: selectedReplyMessageId || null,
+      };
   
-      setMessage("");
+      if (selectedReplyMessageId) {
+        messageData.replyTo = selectedReplyMessageId;
+      }
+  
+      await addDoc(collection(db, "rooms", roomId, "messages"), messageData);
+      setMessage("");  // メッセージをクリア
+      setSelectedReplyMessageId(null);  // 送信後、リプライ元をリセット
     } catch (error) {
       console.error("Error sending message: ", error);
     }
-  };  
+  };    
 
   const formatRelativeTime = (timestamp: Timestamp) => {
     const date = timestamp.toDate();
@@ -250,6 +257,10 @@ export default function RoomPage() {
       console.error("Error updating likes: ", error);
     }
   };
+
+  const handleReply = (messageId: string) => {
+    setSelectedReplyMessageId(messageId);  // リプライ元メッセージIDを設定
+  };  
 
   return (
     <div>
@@ -348,6 +359,7 @@ export default function RoomPage() {
             </div>)}
 
           <div className="flex flex-col bg-white p-4 rounded-lg space-y-2">
+            {/* ここにリプライされていたら情報を */}
             <input type="text" value={username} onChange={handleUsernameChange} className="px-4 py-2 w-full placeholder:text-zinc-400 flex items-center rounded-lg outline-none bg-zinc-50" placeholder="表示名" />
             <textarea value={message} onChange={(e) => setMessage(e.target.value)} className="resize-none bg-zinc-50 mt-2 px-4 py-2 rounded-lg w-full placeholder:text-zinc-400 outline-none" placeholder="メッセージを入力してください" rows={2}/>
             <div className="flex mt-2">
@@ -379,6 +391,14 @@ export default function RoomPage() {
                     <p className="text-sm font-bold mx-2 line-clamp-1">{msg.username}</p>
                     <p className="text-sm text-zinc-400 whitespace-nowrap">{formatRelativeTime(msg.createdAt)}</p>
                   </div>
+                  {msg.replyTo && (
+                      <div className="bg-zinc-50 p-2 rounded-lg border-l-4 border-blue-400 mb-2">
+                        <p className="text-sm text-zinc-600 mb-0.5">In reply to:</p>
+                        {messages.find((m) => m.id === msg.replyTo)?.text && (
+                          <p className="text-sm text-zinc-600">{messages.find((m) => m.id === msg.replyTo)?.text}</p>
+                        )}
+                      </div>
+                    )}
                   <div
                     className="md flex flex-col whitespace-pre-wrap"
                     dangerouslySetInnerHTML={{ __html: marked(formattedText) }}
@@ -388,6 +408,10 @@ export default function RoomPage() {
                     <button onClick={() => handleLike(msg.id, msg.likes)} className="w-fit flex items-center text-sm text-zinc-200 hover:text-red-400 duration-200">
                       <FaHeart className="mr-0.5" />
                       <p>{msg.likes}</p>
+                    </button>
+                    {/* リプライ */}
+                    <button className="ml-auto text-sm text-zinc-200 hover:text-blue-400 duration-200" onClick={() => handleReply(msg.id)}>
+                      <FaReply  />
                     </button>
                   </div>
                 </div>

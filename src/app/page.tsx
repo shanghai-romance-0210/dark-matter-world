@@ -135,24 +135,16 @@ export default function Home() {
               value={roomId}
               onChange={(e) => setRoomId(e.target.value.toLowerCase())}
               className="px-4 py-2 border border-zinc-200 rounded-lg mb-4 w-full"
-              placeholder="ルームID"
+              placeholder="識別ID"
             />
 
             {errorMessage && <p className="text-red-400 text-sm mb-4">{errorMessage}</p>}
 
             <div className="flex items-center justify-end">
-              <button
-                onClick={() => setShowModal(false)}
-                className="bg-blue-50 text-blue-600 py-2 px-4 rounded-full"
-              >
+              <Button onClick={() => setShowModal(false)} variant="secondary" className="mr-2">
                 キャンセル
-              </button>
-              <button
-                onClick={createRoom}
-                className="bg-blue-600 text-white py-2 px-4 rounded-full ml-2"
-              >
-                作成
-              </button>
+              </Button>
+              <Button onClick={createRoom}>作成</Button>
             </div>
           </div>
         </div>
