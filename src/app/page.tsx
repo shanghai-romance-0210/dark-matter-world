@@ -5,6 +5,7 @@ import { collection, onSnapshot, doc, setDoc } from "firebase/firestore";
 import Link from "next/link";
 import { FiPlus, FiSearch } from "react-icons/fi";
 import Image from "next/image";
+import Button from "@/components/ui/Button";
 
 interface Room {
   id: string;
@@ -76,11 +77,11 @@ export default function Home() {
   return (
     <div>
       <div className="px-8 py-4 flex items-center justify-center select-none h-16 bg-white sticky top-0 z-50 shadow-md">
-        <Link href="/" className="flex items-center"><Image src="/logo.svg" alt="Logo" width={100} height={100} className="h-7 w-fit mr-4" /><p className="text-lg">野獣ドットコム</p></Link>
+        <Link href="/" className="flex items-center"><Image src="/logo.svg" alt="Logo" width={100} height={100} className="h-7 w-fit mr-2" /><p className="text-lg">野獣ドットコム</p></Link>
       </div>
 
       <div className="md:container mx-auto p-4 md:p-8">
-        <div className="flex items-center px-4 h-10 overflow-hidden rounded-lg border border-zinc-200 shadow-sm bg-white">
+        <div className="flex items-center px-4 h-10 overflow-hidden rounded-lg border shadow-sm bg-white border-zinc-200 focus-within:ring-4 focus-within:border-blue-400 focus-within:ring-blue-50 duration-200">
           <FiSearch className="mr-4 text-zinc-400" />
           <input
             placeholder="コミュニティを検索する"
@@ -99,7 +100,7 @@ export default function Home() {
 
         <div className="mt-8 grid grid-cols-1 md:grid-cols-4 gap-8">
           {filteredRooms.length > 0 && filteredRooms.map((room, index) => (
-            <div key={index} className="rounded-lg bg-white overflow-hidden">
+            <div key={index} className="rounded-lg bg-white overflow-hidden hover:shadow-md duration-200 hover:translate-y-[-8px]">
               <img src={`https://api.dicebear.com/9.x/identicon/svg?seed=${room.id}&rowColor=60a5fa&backgroundColor=bfdbfe`} alt="avatar" className="h-32 w-full object-cover" />
               <div className="flex p-4">
                 <p className="text-lg line-clamp-2 mr-4">{room.name}</p>
@@ -115,12 +116,9 @@ export default function Home() {
       </div>
 
       <div className="fixed right-8 bottom-8">
-        <button className="px-4 py-2 rounded-full bg-blue-50 text-blue-600 whitespace-nowrap shadow-lg flex items-center" onClick={() => setShowModal(true)}>
-          <FiPlus className="mr-2" />コミュニティを新規作成
-        </button>
+        <Button icon={<FiPlus />} onClick={() => setShowModal(true)} variant="secondary" className="shadow-lg">コミュニティを新規作成</Button>
       </div>
 
-      {/* Modal */}
       {showModal && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50 backdrop-blur">
           <div className="bg-white p-6 rounded-lg w-3/4 md:w-1/4">

@@ -255,7 +255,7 @@ export default function RoomPage() {
     <div>
       {/* Header */}
       <div className="px-8 py-4 flex items-center select-none h-16 bg-white sticky top-0 z-50 shadow-md">
-        <Link href="/" className="flex items-center"><Image src="/logo.svg" alt="Logo" width={100} height={100} className="h-7 w-fit" /></Link><p className="mx-4 line-clamp-1 text-lg">{roomName || "Loading..."}</p>
+        <Link href="/" className="flex items-center"><Image src="/logo.svg" alt="Logo" width={100} height={100} className="h-7 w-fit" /></Link><p className="mx-2 line-clamp-1 text-lg">{roomName || "Loading..."}</p>
         <div className="ml-auto relative z-10">
           <Button variant="outline" size="sm" onClick={() => setIsDropdownOpen(!isDropdownOpen)}>設定</Button>
           <div ref={dropdownRef} className={`absolute border border-zinc-200 right-0 mt-2 w-64 bg-white rounded-lg shadow-lg p-2 overflow-hidden transition-all duration-200 ease-in-out ${ isDropdownOpen ? "scale-100 opacity-100" : "scale-95 opacity-0 pointer-events-none"}`}>
@@ -264,17 +264,57 @@ export default function RoomPage() {
           </div>
         </div>
       </div>
-      
-      {/* Body */}
-      <div className="p-4 md:py-8 md:max-w-md w-full mx-auto">
-            {messages.length > 0 && (<div className="space-y-4">
+
+      {votes.length > 0 && (<div className="space-y-4 mb-8 hidden md:block max-w-64 fixed w-full top-24 right-8">
               {votes.map((vote) => (
-                <div key={vote.id} className="p-4 rounded-lg bg-white shadow-sm mb-8">
+                <div key={vote.id} className="p-4 rounded-lg bg-white shadow-md">
                   <div className="flex items-center mb-4">
                     <h3 className="font-normal text-lg">{vote.question}</h3>
                     <div className="flex items-center ml-auto">
                       <Button  onClick={() => deleteVote(vote.id)} variant="danger" size="sm" className="mr-2">削除</Button>
-                    </div>
+                      </div>
+                  </div>
+                  <div className="space-y-4">
+                    {vote.options.map((option: string, index: number) => {
+                      const totalVotes = vote.votes.reduce((a, b) => a + b, 0);
+                      const hasVotes = totalVotes > 0;
+                      return (
+                        <div key={index} className="space-y-2">
+                          <div className="flex items-center">
+                            <p>{option}</p>
+                            <span className="ml-2 text-sm relative text-zinc-400">{`(${vote.votes[index]})`}</span>
+                          </div>
+                          <button
+                            onClick={() => handleVote(vote.id, index)}
+                            className="w-full h-8 rounded-lg relative overflow-hidden bg-zinc-50"
+                          >
+                            <div
+                              className={`absolute inset-0 ${hasVotes ? 'bg-green-400' : 'bg-zinc-50'}`}
+                              style={{
+                                width: hasVotes
+                                  ? `${Math.round((vote.votes[index] / totalVotes) * 100)}%`
+                                  : '0%',
+                              }}
+                            />
+                          </button>
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
+              ))}
+            </div>)}
+      
+      {/* Body */}
+      <div className="p-4 md:py-8 md:max-w-md w-full mx-auto">
+            {votes.length > 0 && (<div className="space-y-4 mb-8 md:hidden">
+              {votes.map((vote) => (
+                <div key={vote.id} className="p-4 rounded-lg bg-white shadow-sm">
+                  <div className="flex items-center mb-4">
+                    <h3 className="font-normal text-lg">{vote.question}</h3>
+                    <div className="flex items-center ml-auto">
+                      <Button  onClick={() => deleteVote(vote.id)} variant="danger" size="sm" className="mr-2">削除</Button>
+                      </div>
                   </div>
                   <div className="space-y-4">
                     {vote.options.map((option: string, index: number) => {
