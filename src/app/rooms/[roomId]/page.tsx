@@ -288,7 +288,7 @@ export default function RoomPage() {
               {votes.map((vote) => (
                 <div key={vote.id} className="p-4 rounded-lg bg-white shadow-md">
                   <div className="flex items-center mb-4">
-                    <h3 className="font-normal text-lg">{vote.question}</h3>
+                    <h3 className="font-normal text-sm">{vote.question}</h3>
                     <div className="flex items-center ml-auto">
                       <Button  onClick={() => deleteVote(vote.id)} variant="danger" size="sm" className="mr-2">削除</Button>
                       </div>
@@ -330,7 +330,7 @@ export default function RoomPage() {
               {votes.map((vote) => (
                 <div key={vote.id} className="p-4 rounded-lg bg-white shadow-sm">
                   <div className="flex items-center">
-                    <h3 className="font-normal text-lg">{vote.question}</h3>
+                    <h3 className="font-normal text-sm">{vote.question}</h3>
                     <div className="flex items-center ml-auto">
                       <Button  onClick={() => deleteVote(vote.id)} variant="danger" size="sm" className="mr-2">削除</Button>
                       <Button size="sm" variant="outline" onClick={() => toggleExpand(vote.id)}>{expandedVotes[vote.id] ? '縮小' : '拡大'}</Button>
