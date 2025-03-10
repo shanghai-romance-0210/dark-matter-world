@@ -5,11 +5,10 @@ import { collection, addDoc, query, orderBy, onSnapshot, Timestamp, doc, deleteD
 import { usePathname } from "next/navigation"; 
 import { formatDistanceToNow } from "date-fns"; 
 import Link from "next/link";
-import { FiPlus, FiTrash } from "react-icons/fi";
+import { FiAlertCircle, FiPlus, FiTrash } from "react-icons/fi";
 import Avatar from "@/components/Avatar";
 import { marked } from "marked";
 import VoteModal from "@/components/VoteModal";
-import PoopModal from "@/components/PoopModal";
 import Image from "next/image";
 import { FaHeart, FaReply } from "react-icons/fa";
 import Button from "@/components/ui/Button";
@@ -31,7 +30,7 @@ interface Vote {
   votes: number[];
 }
 
-const stamps = ["1", "2", "3", "4"];
+const stamps = ["1", "2", "3", "4", "5"];
 
 export default function RoomPage() {
   const [message, setMessage] = useState("");
@@ -45,17 +44,16 @@ export default function RoomPage() {
   const [voteQuestion, setVoteQuestion] = useState("");
   const [voteOptions, setVoteOptions] = useState<string[]>(["", ""]);
   const [votes, setVotes] = useState<Vote[]>([]);
-  const [poopModalOpen, setPoopModalOpen] = useState(false);
   const [isSmileDropdownOpen, setIsSmileDropdownOpen] = useState(false);
   const [selectedReplyMessageId, setSelectedReplyMessageId] = useState<string | null>(null);
   const [expandedVotes, setExpandedVotes] = useState<{ [key: string]: boolean }>({});
-  const [isBackgroundVisible, setIsBackgroundVisible] = useState(true);
+  const [isBackgroundVisible, setIsBackgroundVisible] = useState(false);
 
   const dropdownRef = useRef<HTMLDivElement>(null);
   const smileDropdownRef = useRef<HTMLDivElement>(null);
   
   const hideBackground = () => {
-    setIsBackgroundVisible(false);
+    setIsBackgroundVisible(prevState => !prevState);
   };  
 
   useEffect(() => {
@@ -287,7 +285,7 @@ export default function RoomPage() {
           <div ref={dropdownRef} className={`absolute right-0 mt-2 w-64 bg-white rounded-lg special-shadow p-2 overflow-hidden transition-all duration-200 ease-in-out ${ isDropdownOpen ? "scale-100 opacity-100" : "scale-95 opacity-0 pointer-events-none"}`}>
             <Button onClick={() => setIsVoteModalOpen(true)} variant="text" icon={<FiPlus />} className="rounded-none w-full font-normal">投票を作成する</Button>
             <Button onClick={deleteRoom} variant="text" icon={<FiTrash />} className="rounded-none w-full font-normal">コミュニティを削除する</Button>
-            <Button onClick={hideBackground} variant="danger" icon={<FiTrash />} className="rounded-none w-full font-normal">野獣先輩を野獣邸に帰らせます</Button>
+            <Button onClick={hideBackground} variant="danger" icon={<FiAlertCircle />} className="rounded-none w-full font-normal">ﾔｼﾞｭ!!</Button>
           </div>
         </div>
       </div>
@@ -458,7 +456,6 @@ export default function RoomPage() {
     
 
       <VoteModal  isOpen={isVoteModalOpen}  closeModal={() => setIsVoteModalOpen(false)}  voteQuestion={voteQuestion}  setVoteQuestion={setVoteQuestion}  voteOptions={voteOptions}  setVoteOptions={setVoteOptions}  createVote={createVote} />
-      <PoopModal isOpen={poopModalOpen} close={() => setPoopModalOpen(false)} />
     </div>
   );
 }
