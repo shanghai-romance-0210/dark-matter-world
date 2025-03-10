@@ -49,9 +49,14 @@ export default function RoomPage() {
   const [isSmileDropdownOpen, setIsSmileDropdownOpen] = useState(false);
   const [selectedReplyMessageId, setSelectedReplyMessageId] = useState<string | null>(null);
   const [expandedVotes, setExpandedVotes] = useState<{ [key: string]: boolean }>({});
+  const [isBackgroundVisible, setIsBackgroundVisible] = useState(true);
 
   const dropdownRef = useRef<HTMLDivElement>(null);
-  const smileDropdownRef = useRef<HTMLDivElement>(null); 
+  const smileDropdownRef = useRef<HTMLDivElement>(null);
+  
+  const hideBackground = () => {
+    setIsBackgroundVisible(false);
+  };  
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -272,8 +277,8 @@ export default function RoomPage() {
 
   return (
     <div>
-      <div className="background-image" />
-      
+      {isBackgroundVisible && <div className="background-image" />}
+
       {/* Header */}
       <div className="px-8 py-4 flex items-center select-none h-16 bg-white sticky top-0 z-50 shadow-md">
         <Link href="/" className="flex items-center"><Image src="/logo.svg" alt="Logo" width={100} height={100} className="h-6 w-fit" /></Link><p className="mx-2 line-clamp-1 font-bold">{roomName || "Loading..."}</p>
@@ -282,6 +287,7 @@ export default function RoomPage() {
           <div ref={dropdownRef} className={`absolute right-0 mt-2 w-64 bg-white rounded-lg special-shadow p-2 overflow-hidden transition-all duration-200 ease-in-out ${ isDropdownOpen ? "scale-100 opacity-100" : "scale-95 opacity-0 pointer-events-none"}`}>
             <Button onClick={() => setIsVoteModalOpen(true)} variant="text" icon={<FiPlus />} className="rounded-none w-full font-normal">投票を作成する</Button>
             <Button onClick={deleteRoom} variant="text" icon={<FiTrash />} className="rounded-none w-full font-normal">コミュニティを削除する</Button>
+            <Button onClick={hideBackground} variant="danger" icon={<FiTrash />} className="rounded-none w-full font-normal">野獣先輩を野獣邸に帰らせます</Button>
           </div>
         </div>
       </div>
