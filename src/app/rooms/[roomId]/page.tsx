@@ -30,7 +30,7 @@ interface Vote {
   votes: number[];
 }
 
-const stamps = ["1", "2", "3", "4", "5", "6"];
+const stamps = ["1", "2", "3", "4", "5", "6", "7"];
 
 export default function RoomPage() {
   const [message, setMessage] = useState("");
@@ -324,7 +324,7 @@ export default function RoomPage() {
                             className="w-full h-8 rounded-lg relative overflow-hidden bg-zinc-50"
                           >
                             <div
-                              className={`absolute inset-0 ${hasVotes ? 'bg-green-400' : 'bg-zinc-50'}`}
+                              className={`absolute inset-0 ${hasVotes ? 'bg-gradient-to-r from-green-400 to-green-300' : 'bg-zinc-50'}`}
                               style={{
                                 width: hasVotes
                                   ? `${Math.round((vote.votes[index] / totalVotes) * 100)}%`
@@ -368,7 +368,7 @@ export default function RoomPage() {
                             className="w-full h-8 rounded-lg relative overflow-hidden bg-zinc-50"
                           >
                             <div
-                              className={`absolute inset-0 ${hasVotes ? 'bg-green-400' : 'bg-zinc-50'}`}
+                              className={`absolute inset-0 ${hasVotes ? 'bg-gradient-to-r from-green-400 to-green-300' : 'bg-zinc-50'}`}
                               style={{
                                 width: hasVotes
                                   ? `${Math.round((vote.votes[index] / totalVotes) * 100)}%`
@@ -385,7 +385,7 @@ export default function RoomPage() {
               ))}
             </div>)}
 
-          <div className="flex flex-col bg-white p-4 rounded-lg">
+          <div className="flex flex-col bg-white p-4 rounded-lg shadow-sm">
             {selectedReplyMessageId && (
               <div className="bg-zinc-50 p-2 rounded-lg border-l-4 border-blue-400 mb-4 flex items-center">
                 <div>
