@@ -16,6 +16,19 @@ body {
   font-family: "Open Sans", Arial, Helvetica, sans-serif;
 }
 
+.background-image {
+  position: fixed;  /* 固定表示 */
+  top: 0;
+  left: 0;
+  width: 100vw;  /* ビューポートの幅いっぱい */
+  height: 100vh;  /* ビューポートの高さいっぱい */
+  background-image: url('/beast.webp');
+  background-size: cover;  /* 画像を画面全体に広げる */
+  background-position: center;  /* 画像を中央に配置 */
+  filter: blur(32px);
+  z-index: -1;
+}
+
 .menu-button {
   margin-bottom: -24px;
 }

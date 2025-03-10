@@ -272,8 +272,10 @@ export default function RoomPage() {
 
   return (
     <div>
+      <div className="background-image" />
+      
       {/* Header */}
-      <div className="px-8 py-4 flex items-center select-none h-16 bg-white sticky top-0 z-50 border-b border-zinc-200">
+      <div className="px-8 py-4 flex items-center select-none h-16 bg-white sticky top-0 z-50 shadow-md">
         <Link href="/" className="flex items-center"><Image src="/logo.svg" alt="Logo" width={100} height={100} className="h-6 w-fit" /></Link><p className="mx-2 line-clamp-1 font-bold">{roomName || "Loading..."}</p>
         <div className="ml-auto relative z-10">
           <Button variant="outline" size="sm" onClick={() => setIsDropdownOpen(!isDropdownOpen)}>設定</Button>
