@@ -199,6 +199,12 @@ export default function RoomPage() {
 
   const deleteRoom = async () => {
     if (!roomId) return;
+
+    const isConfirmed = window.confirm("本当にコミュニティを削除しますか？この操作は元に戻せません。");
+    if (!isConfirmed) {
+      return;
+    }
+
     try {
       const messagesRef = collection(db, "rooms", roomId, "messages");
       const messageSnapshot = await getDocs(messagesRef);
@@ -235,6 +241,10 @@ export default function RoomPage() {
 
   const deleteVote = async (voteId: string) => {
     if (!roomId) return;
+    const isConfirmed = window.confirm("本当に投票を削除しますか？この操作は元に戻せません。");
+    if (!isConfirmed) {
+      return;
+    }
     try {
       const voteRef = doc(db, "rooms", roomId, "votes", voteId);
       await deleteDoc(voteRef);

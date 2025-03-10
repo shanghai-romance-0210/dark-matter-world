@@ -25,7 +25,7 @@ body {
   background-image: url('/beast.webp');
   background-size: cover;  /* 画像を画面全体に広げる */
   background-position: center;  /* 画像を中央に配置 */
-  filter: blur(32px);
+  filter: blur(16px);
   z-index: -1;
 }
 
