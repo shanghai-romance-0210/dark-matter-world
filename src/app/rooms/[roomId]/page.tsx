@@ -30,7 +30,7 @@ interface Vote {
   votes: number[];
 }
 
-const stamps = ["1", "2", "3", "4", "5"];
+const stamps = ["1", "2", "3", "4", "5", "6"];
 
 export default function RoomPage() {
   const [message, setMessage] = useState("");
