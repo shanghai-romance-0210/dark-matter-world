@@ -273,13 +273,13 @@ export default function RoomPage() {
   return (
     <div>
       {/* Header */}
-      <div className="px-8 py-4 flex items-center select-none h-16 bg-white sticky top-0 z-50 shadow-md">
-        <Link href="/" className="flex items-center"><Image src="/logo.svg" alt="Logo" width={100} height={100} className="h-7 w-fit" /></Link><p className="mx-2 line-clamp-1 text-lg">{roomName || "Loading..."}</p>
+      <div className="px-8 py-4 flex items-center select-none h-16 bg-white sticky top-0 z-50 border-b border-zinc-200">
+        <Link href="/" className="flex items-center"><Image src="/logo.svg" alt="Logo" width={100} height={100} className="h-6 w-fit" /></Link><p className="mx-2 line-clamp-1 font-bold">{roomName || "Loading..."}</p>
         <div className="ml-auto relative z-10">
           <Button variant="outline" size="sm" onClick={() => setIsDropdownOpen(!isDropdownOpen)}>設定</Button>
-          <div ref={dropdownRef} className={`absolute border border-zinc-200 right-0 mt-2 w-64 bg-white rounded-lg shadow-lg p-2 overflow-hidden transition-all duration-200 ease-in-out ${ isDropdownOpen ? "scale-100 opacity-100" : "scale-95 opacity-0 pointer-events-none"}`}>
-            <Button onClick={() => setIsVoteModalOpen(true)} variant="text" icon={<FiPlus />} className="rounded-none w-full">投票を作成する</Button>
-            <Button onClick={deleteRoom} variant="text" icon={<FiTrash />} className="rounded-none w-full">コミュニティを削除する</Button>
+          <div ref={dropdownRef} className={`absolute right-0 mt-2 w-64 bg-white rounded-lg special-shadow p-2 overflow-hidden transition-all duration-200 ease-in-out ${ isDropdownOpen ? "scale-100 opacity-100" : "scale-95 opacity-0 pointer-events-none"}`}>
+            <Button onClick={() => setIsVoteModalOpen(true)} variant="text" icon={<FiPlus />} className="rounded-none w-full font-normal">投票を作成する</Button>
+            <Button onClick={deleteRoom} variant="text" icon={<FiTrash />} className="rounded-none w-full font-normal">コミュニティを削除する</Button>
           </div>
         </div>
       </div>
@@ -388,7 +388,7 @@ export default function RoomPage() {
             <div className="flex mt-4">
               <div className="relative">
                 <Button variant="secondary" size="sm" onClick={() => setIsSmileDropdownOpen(!isSmileDropdownOpen)}>スタンプ</Button>
-                <div ref={smileDropdownRef} className={`flex flex-wrap gap-2 absolute z-10 mt-2 left-0 w-64 bg-white border border-zinc-200 rounded-lg shadow-lg p-4 transition-all duration-200 ease-in-out ${ isSmileDropdownOpen ? "scale-100 opacity-100" : "scale-95 opacity-0 pointer-events-none"}`}>
+                <div ref={smileDropdownRef} className={`flex flex-wrap gap-2 absolute z-10 mt-2 left-0 w-64 bg-white rounded-lg special-shadow p-4 transition-all duration-200 ease-in-out ${ isSmileDropdownOpen ? "scale-100 opacity-100" : "scale-95 opacity-0 pointer-events-none"}`}>
                   {stamps.map((stamp) => (
                     <button key={stamp} onClick={() => handleStampClick(stamp)} className="w-10 h-10 aspect-square hover:bg-zinc-200 duration-200 bg-white flex items-center justify-center">
                       <Image src={`/stamps/${stamp}.png`} alt={stamp} width={100} height={100} className="w-auto h-8" />
